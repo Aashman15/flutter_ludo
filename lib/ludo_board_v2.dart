@@ -12,6 +12,7 @@ import 'package:ludo/areas/red_area.dart';
 import 'package:ludo/safe_zones.dart';
 import 'package:ludo/should_move.dart';
 import 'package:ludo/areas/yellow_area.dart';
+import 'package:ludo/states/first_roller.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
 class LudoBoardV2 extends StatefulWidget {
@@ -170,7 +171,6 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
           playSound('error');
         }
 
-
         // kill pieces
         if (!pieces[i].position.contains('-')) {
           if (!safeZones.contains(int.parse(pieces[i].position))) {
@@ -181,9 +181,9 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
                       !p.id.contains(pieceId.split('-')[0]),
                 )
                 .toList();
-            if(piecesToBeKilled.isEmpty){
+            if (piecesToBeKilled.isEmpty) {
               playSound('move');
-            }else{
+            } else {
               playSound('kill');
             }
             for (int j = 0; j < pieces.length; j++) {
@@ -196,10 +196,10 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
                 pieces[j].position = '';
               }
             }
-          }else{
+          } else {
             playSound('move');
           }
-        }else{
+        } else {
           playSound('move');
         }
         // kill pieces ends here
@@ -260,7 +260,12 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
     String message = '';
 
     if (!diceState.rolled) {
-      message = 'Blue, please roll the dice!';
+      diceState.rolled = true;
+      diceState.roll = 1;
+      diceState.rolledBy = firstEverRoller;
+      diceState.nextRoller = firstEverRoller;
+      message =
+          capitalizeFirstLetter('$firstEverRoller, please roll the dice!');
     } else {
       String roller = diceState.rolledBy;
       if (shouldMove && !moved && rolled) {
@@ -271,7 +276,7 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
       }
     }
 
-   String diceColor =  message.split(',')[0];
+    String diceColor = message.split(',')[0];
 
     return Center(
       child: Column(
@@ -311,7 +316,10 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
               const SizedBox(
                 width: 5,
               ),
-              DiceRoller(onDiceRoll: rollDice, color: diceColor,),
+              DiceRoller(
+                onDiceRoll: rollDice,
+                color: diceColor,
+              ),
               const SizedBox(
                 width: 5,
               ),

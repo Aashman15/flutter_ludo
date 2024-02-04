@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:ludo/clicked_piece.dart';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:ludo/clicked_piece.dart';
 import 'package:ludo/dice_state.dart';
-import 'package:ludo/models/piece.dart';
 import 'package:ludo/moved_rolled.dart';
-import 'package:ludo/pieces.dart';
 import 'package:ludo/should_move.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
@@ -58,22 +56,14 @@ class _DiceRollerState extends State<DiceRoller> {
       int currentRoll = randomizer.nextInt(6) + 1;
       diceState.roll = currentRoll;
 
-      String currentRoller = '';
-      if (!diceState.rolled) {
-        diceState.rolled = true;
-        diceState.rolledBy = 'blue';
-        currentRoller = 'blue';
+      if (diceState.previousRoll == 1 || diceState.previousRoll == 6) {
+        diceState.rolledBy = diceState.previousRoller;
       } else {
-        if (diceState.previousRoll == 1 || diceState.previousRoll == 6) {
-          diceState.rolledBy = diceState.previousRoller;
-        } else {
-          diceState.rolledBy =
-              getNextRoller(diceState.previousRoller, diceState.previousRoll);
-        }
-        currentRoller = diceState.rolledBy;
+        diceState.rolledBy =
+            getNextRoller(diceState.previousRoller, diceState.previousRoll);
       }
 
-      diceState.nextRoller = getNextRoller(currentRoller, currentRoll);
+      diceState.nextRoller = getNextRoller(diceState.rolledBy, currentRoll);
       playSound('roll');
 
       widget.onDiceRoll();
