@@ -1,0 +1,1 @@
+int numberOfPiecesToBePlayed = 4;

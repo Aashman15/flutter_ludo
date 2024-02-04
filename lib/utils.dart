@@ -2,15 +2,14 @@ import 'package:ludo/clicked_piece.dart';
 import 'package:ludo/dice_state.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/pieces.dart';
+import 'package:ludo/states/number_of_pieces.dart';
 
 bool get shouldMove {
   String roller = diceState.rolledBy;
   int roll = diceState.roll;
 
-  if (clickedPiece.isNotEmpty) {
-    if (!clickedPiece.contains(roller)) {
-      return false;
-    }
+  if (clickedPiece.isNotEmpty && !clickedPiece.contains(roller)) {
+    return false;
   }
 
   List<Piece> filteredPieces =
@@ -19,7 +18,7 @@ bool get shouldMove {
   List<Piece> unFreedPieces =
       filteredPieces.where((p) => !p.freedFromPrison).toList();
 
-  if (roll == 1 && unFreedPieces.length == 4) {
+  if (roll == 1 && unFreedPieces.length == numberOfPiecesToBePlayed) {
     return true;
   }
 

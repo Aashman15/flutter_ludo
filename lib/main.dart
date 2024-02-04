@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ludo/ludo_board_v2.dart';
+import 'package:ludo/my_ludo_app.dart';
 
 void main(List<String> args) {
   runApp(
     const MaterialApp(
-      home: Scaffold(body: LudoBoardV2()),
+      home: Scaffold(
+        body: MyLudoApp(),
+      ),
     ),
   );
 }
