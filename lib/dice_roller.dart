@@ -22,7 +22,6 @@ class DiceRoller extends StatefulWidget {
 }
 
 class _DiceRollerState extends State<DiceRoller> {
-
   void rollDice() {
     setState(() {
       clickedPiece = '';
@@ -42,10 +41,16 @@ class _DiceRollerState extends State<DiceRoller> {
       if (diceState.previousRoll == 1 || diceState.previousRoll == 6) {
         diceState.rolledBy = diceState.previousRoller;
       } else {
-        String nextRoller =  getNextRoller(diceState.previousRoller, diceState.previousRoll);
+        String nextRoller =
+            getNextRoller(diceState.previousRoller, diceState.previousRoll);
 
-        if(!shouldGiveTurnToTheRoller(nextRoller)){
-          nextRoller = getNextRoller(nextRoller, 0);
+        bool keepLooping = true;
+        while (keepLooping) {
+          if (!shouldGiveTurnToTheRoller(nextRoller)) {
+            nextRoller = getNextRoller(nextRoller, 0);
+          } else {
+            keepLooping = false;
+          }
         }
 
         diceState.rolledBy = nextRoller;
