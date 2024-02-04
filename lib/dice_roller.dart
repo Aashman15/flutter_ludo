@@ -42,23 +42,6 @@ class _DiceRollerState extends State<DiceRoller> {
     }
   }
 
-// depends on pieces state
-  bool shouldDisableRolling() {
-    List<Piece> piecesOfRolledBy =
-        pieces.where((piece) => piece.id.contains(diceState.rolledBy)).toList();
-
-    List<Piece> freedPiecesOfRolledBy =
-        piecesOfRolledBy.where((piece) => piece.freedFromPrison).toList();
-
-    if (freedPiecesOfRolledBy.isEmpty) {
-      return false;
-    }
-
-    // other color specific conditions
-
-    return true;
-  }
-
   void rollDice() {
     setState(() {
       clickedPiece = '';
@@ -90,7 +73,6 @@ class _DiceRollerState extends State<DiceRoller> {
         currentRoller = diceState.rolledBy;
       }
 
-      diceState.disableRolling = shouldDisableRolling();
       diceState.nextRoller = getNextRoller(currentRoller, currentRoll);
       playSound('roll');
 
@@ -103,12 +85,10 @@ class _DiceRollerState extends State<DiceRoller> {
     int currentDiceRoll = diceState.roll == 0 ? 1 : diceState.roll;
     String currentColor = widget.color.toLowerCase();
 
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         InkWell(
-
           onTap: rollDice,
           child: Image.asset(
             'assets/images/dice-$currentColor-$currentDiceRoll.png',
@@ -116,7 +96,6 @@ class _DiceRollerState extends State<DiceRoller> {
             height: 50,
           ),
         ),
-
       ],
     );
   }

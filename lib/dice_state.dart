@@ -6,6 +6,5 @@ DiceState diceState = DiceState(
   nextRoller: '',
   previousRoller: '',
   previousRoll: 0,
-  disableRolling: false,
   rolled: false,
 );
