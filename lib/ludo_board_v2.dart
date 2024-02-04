@@ -196,6 +196,8 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
                 pieces[j].position = '';
               }
             }
+          }else{
+            playSound('move');
           }
         }else{
           playSound('move');
