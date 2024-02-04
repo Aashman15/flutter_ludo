@@ -10,7 +10,7 @@ import 'package:ludo/pieces.dart';
 import 'package:ludo/prison.dart';
 import 'package:ludo/areas/red_area.dart';
 import 'package:ludo/safe_zones.dart';
-import 'package:ludo/should_move.dart';
+import 'package:ludo/utils.dart';
 import 'package:ludo/areas/yellow_area.dart';
 import 'package:ludo/states/first_roller.dart';
 import 'package:ludo/utils/sound_utils.dart';
@@ -255,6 +255,8 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
     return word[0].toUpperCase() + word.substring(1);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     String message = '';
@@ -272,6 +274,13 @@ class _LudoBoardV2State extends State<LudoBoardV2> {
         message = capitalizeFirstLetter('$roller, please move your piece!');
       } else {
         roller = diceState.nextRoller;
+
+        if (!shouldGiveTurnToTheRoller(roller)) {
+          diceState.previousRoller = roller;
+          diceState.previousRoll = 0;
+          roller = getNextRoller(diceState.previousRoller, diceState.previousRoll);
+        }
+
         message = capitalizeFirstLetter('$roller, please roll the dice!');
       }
     }

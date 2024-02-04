@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ludo/clicked_piece.dart';
 import 'package:ludo/dice_state.dart';
 import 'package:ludo/moved_rolled.dart';
-import 'package:ludo/should_move.dart';
+import 'package:ludo/utils.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
 final randomizer = Random();
@@ -22,23 +22,6 @@ class DiceRoller extends StatefulWidget {
 }
 
 class _DiceRollerState extends State<DiceRoller> {
-  String getNextRoller(String roller, int roll) {
-    if (roll == 6 || roll == 1) {
-      return roller;
-    }
-    switch (roller) {
-      case 'blue':
-        return 'yellow';
-      case 'yellow':
-        return 'green';
-      case 'green':
-        return 'red';
-      case 'red':
-        return 'blue';
-      default:
-        throw Exception('invalid color');
-    }
-  }
 
   void rollDice() {
     setState(() {
@@ -59,8 +42,13 @@ class _DiceRollerState extends State<DiceRoller> {
       if (diceState.previousRoll == 1 || diceState.previousRoll == 6) {
         diceState.rolledBy = diceState.previousRoller;
       } else {
-        diceState.rolledBy =
-            getNextRoller(diceState.previousRoller, diceState.previousRoll);
+        String nextRoller =  getNextRoller(diceState.previousRoller, diceState.previousRoll);
+
+        if(!shouldGiveTurnToTheRoller(nextRoller)){
+          nextRoller = getNextRoller(nextRoller, 0);
+        }
+
+        diceState.rolledBy = nextRoller;
       }
 
       diceState.nextRoller = getNextRoller(diceState.rolledBy, currentRoll);

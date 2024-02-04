@@ -5,10 +5,10 @@ List<Piece> pieces = [
   // blue starts
   Piece(
     id: 'blue-1',
-    position: '',
-    freedFromPrison: false,
-    insideHome: false,
-    insideHomeArea: false,
+    position: 'b-6',
+    freedFromPrison: true,
+    insideHome: true,
+    insideHomeArea: true,
     button: ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
@@ -20,10 +20,10 @@ List<Piece> pieces = [
   ),
   Piece(
     id: 'blue-2',
-    position: '',
-    freedFromPrison: false,
-    insideHome: false,
-    insideHomeArea: false,
+    position: 'b-6',
+    freedFromPrison: true,
+    insideHome: true,
+    insideHomeArea: true,
     button: ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
@@ -35,10 +35,10 @@ List<Piece> pieces = [
   ),
   Piece(
     id: 'blue-3',
-    position: '',
-    freedFromPrison: false,
-    insideHome: false,
-    insideHomeArea: false,
+    position: 'b-6',
+    freedFromPrison: true,
+    insideHome: true,
+    insideHomeArea: true,
     button: ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
@@ -50,10 +50,10 @@ List<Piece> pieces = [
   ),
   Piece(
     id: 'blue-4',
-    position: '',
-    freedFromPrison: false,
-    insideHome: false,
-    insideHomeArea: false,
+    position: 'b-6',
+    freedFromPrison: true,
+    insideHome: true,
+    insideHomeArea: true,
     button: ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(

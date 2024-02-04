@@ -51,3 +51,29 @@ bool get shouldMove {
 
   return shouldMove;
 }
+
+String getNextRoller(String roller, int roll) {
+  if (roll == 6 || roll == 1) {
+    return roller;
+  }
+  switch (roller) {
+    case 'blue':
+      return 'yellow';
+    case 'yellow':
+      return 'green';
+    case 'green':
+      return 'red';
+    case 'red':
+      return 'blue';
+    default:
+      throw Exception('invalid color');
+  }
+}
+
+bool shouldGiveTurnToTheRoller(String roller) {
+  List<Piece> piecesInsideHome = pieces
+      .where((piece) => piece.id.contains(roller) && piece.insideHome)
+      .toList();
+
+  return piecesInsideHome.length != 4;
+}
