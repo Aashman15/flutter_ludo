@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ludo/models/piece.dart';
-import 'package:ludo/pieces.dart';
+import 'package:ludo/data/pieces.dart';
+import 'package:ludo/screens/board/widgets/piece_button.dart';
 
 // if position matches then return piece id
 // if more than one piece found with same position then return piece id of active color
@@ -38,15 +39,14 @@ Widget getTableCellChild(
   int length = filteredPieces.length;
 
   if (length == 1) {
-    ElevatedButton originalButton = filteredPieces[0].button;
+    PieceButton originalButton = filteredPieces[0].button;
 
     return SizedBox(
       height: 20,
       width: 20,
-      child: ElevatedButton(
+      child: PieceButton(
+        backgroundColor: originalButton.backgroundColor,
         onPressed: onPieceClick,
-        style: originalButton.style,
-        child: const Text(''),
       ),
     );
   }
@@ -58,7 +58,7 @@ Widget getTableCellChild(
         )
         .toList();
 
-    ElevatedButton originalButton;
+    PieceButton originalButton;
     if (piecesWithActiveColor.isNotEmpty) {
       originalButton = filteredPieces
           .where(
@@ -74,10 +74,9 @@ Widget getTableCellChild(
     return SizedBox(
       height: 20,
       width: 20,
-      child: ElevatedButton(
+      child: PieceButton(
+        backgroundColor: originalButton.backgroundColor,
         onPressed: onPieceClick,
-        style: originalButton.style,
-        child: const Text(''),
       ),
     );
   }

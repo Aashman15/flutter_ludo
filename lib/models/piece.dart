@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludo/screens/board/widgets/piece_button.dart';
 
 class Piece {
   Piece(
@@ -13,7 +14,7 @@ class Piece {
   final String id;
 
   String position;
-  ElevatedButton button;
+  PieceButton button;
 
 // inside home area of blue is 1 to 7
 // inside home area of yellow is 14 to 20

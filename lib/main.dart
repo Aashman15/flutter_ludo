@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:ludo/my_ludo_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/screens/initializer/initializer_screen.dart';
 
 void main(List<String> args) {
   runApp(
-    const MaterialApp(
-      home: Scaffold(
-        body: MyLudoApp(),
+    const ProviderScope(
+      child: MaterialApp(
+        home: LudoBoardInitializerScreen(),
       ),
     ),
   );

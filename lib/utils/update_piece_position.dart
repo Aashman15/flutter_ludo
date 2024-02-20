@@ -1,9 +1,8 @@
 import 'package:ludo/models/piece.dart';
-import 'package:ludo/pieces.dart';
-import 'package:ludo/safe_zones.dart';
+import 'package:ludo/data/pieces.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
-void updatePiecePosition(String pieceId, int add) {
+void updatePiecePosition(String pieceId, int add, List<int> safePositions) {
   List<String> splittedPieceId = pieceId.split('-');
 
   for (int i = 0; i < pieces.length; i++) {
@@ -151,13 +150,13 @@ void updatePiecePosition(String pieceId, int add) {
 
       // kill pieces
       if (!pieces[i].position.contains('-')) {
-        if (!safeZones.contains(int.parse(pieces[i].position))) {
+        if (!safePositions.contains(int.parse(pieces[i].position))) {
           List<Piece> piecesToBeKilled = pieces
               .where(
                 (p) =>
-            p.position == pieces[i].position &&
-                !p.id.contains(pieceId.split('-')[0]),
-          )
+                    p.position == pieces[i].position &&
+                    !p.id.contains(pieceId.split('-')[0]),
+              )
               .toList();
           if (piecesToBeKilled.isEmpty) {
             playSound('move');
