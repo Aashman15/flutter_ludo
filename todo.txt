@@ -1,0 +1,14 @@
+bugs
+=========
+
+1) when moving to board screen , the state is not set as configured in initializer screen
+2) first turn color displaying twice in dice even though the roll is not 6 or 1
+3) roll is getting updated for previous color
+
+other todos
+================
+3) improve code and make it readable
+4) provide sound for entering home
+5) provide sound for victory
+6) make entering home also give another turn
+7) make killing also give another turn
