@@ -11,11 +11,11 @@ class SecondRow extends StatelessWidget {
     return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(width: 150, child: RedArea()),
+        Expanded(child: RedArea()),
         SizedBox(width: 5),
         DiceRoller(),
         SizedBox(width: 5),
-        SizedBox(width: 150, child: YellowArea()),
+        Expanded(child: YellowArea()),
       ],
     );
   }

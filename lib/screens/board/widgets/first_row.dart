@@ -12,7 +12,7 @@ class FirstRow extends StatelessWidget {
       children: [
         Prison(color: 'red'),
         SizedBox(width: 20),
-        SizedBox(width: 100, child: BlueArea()),
+        SizedBox(width: 135, child: BlueArea()),
         SizedBox(width: 20),
         Prison(color: 'blue')
       ],

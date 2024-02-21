@@ -12,7 +12,7 @@ class ThirdRow extends StatelessWidget {
       children: [
         Prison(color: 'green'),
         SizedBox(width: 20),
-        SizedBox(width: 100, child: GreenArea()),
+        SizedBox(width: 135, child: GreenArea()),
         SizedBox(width: 20),
         Prison(color: 'yellow')
       ],

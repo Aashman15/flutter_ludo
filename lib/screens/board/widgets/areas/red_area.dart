@@ -6,11 +6,11 @@ class RedArea extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _YellowAreaWidget();
+    return _RedAreaState();
   }
 }
 
-class _YellowAreaWidget extends State<RedArea> {
+class _RedAreaState extends State<RedArea> {
   String getPositionForFirstColumn(int tableRowIndex) {
     switch (tableRowIndex) {
       case 0:

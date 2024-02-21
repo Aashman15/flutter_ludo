@@ -64,7 +64,6 @@ class BlueArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     List<TableRow> tableRows = [];
 
     for (int i = 0; i < 6; i++) {

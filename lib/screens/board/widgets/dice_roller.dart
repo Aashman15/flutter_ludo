@@ -21,6 +21,7 @@ class DiceRoller extends ConsumerWidget {
       playSound('error');
       return;
     }
+    playSound('roll');
 
     ref.read(clickedPieceProvider.notifier).setClickedPiece('');
 

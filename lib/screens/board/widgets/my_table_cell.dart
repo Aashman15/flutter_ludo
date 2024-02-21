@@ -99,6 +99,18 @@ class MyTableCell extends ConsumerWidget {
     return true;
   }
 
+  double? getHeightForTableCell(color){
+    if(color == 'blue' || color == 'green'){
+      return 30;
+    }
+
+    if(color == 'red' || color == 'yellow'){
+      return 35;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
@@ -106,6 +118,7 @@ class MyTableCell extends ConsumerWidget {
     return TableCell(
       key: Key(colPosition.toString()),
       child: Container(
+        height: getHeightForTableCell(color),
         decoration: getDecoration(colPosition, ref),
         child: getTableCellChild(
           colPosition,

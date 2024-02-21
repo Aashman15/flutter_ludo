@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
 
 class Piece {
-  Piece(
-      {required this.id,
-      required this.position,
-      required this.button,
-      required this.insideHomeArea,
-      required this.insideHome,
-      required this.freedFromPrison});
+  Piece({
+    required this.id,
+    required this.position,
+    required this.button,
+    required this.insideHomeArea,
+    required this.insideHome,
+    required this.freedFromPrison,
+  });
 
   //color-num like red-1
   final String id;

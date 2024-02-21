@@ -4,54 +4,49 @@ import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/providers/safe_zones_provider.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
+const Map<String, List<int>> insideHomeAreaCriteria = {
+  'blue': [1, 7],
+  'yellow': [14, 20],
+  'green': [27, 33],
+  'red': [40, 46],
+};
+
 void updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
-  List<Piece> piecesFromProvider = ref.watch(piecesProvider);
-  List<int> safePositions = ref.watch(safePositionsProvider);
+  final pieces = ref.watch(piecesProvider);
 
-  List<Piece> pieces = [...piecesFromProvider];
+  final piece = pieces.where((piece) => pieceId == piece.id).first;
 
-  for (int i = 0; i < pieces.length; i++) {
-    if (pieces[i].id == pieceId) {
-      Piece piece = pieces[i];
+  final position = piece.position;
 
-      updatePositionIfColorIsBlue(roll, piece);
+  String color = pieceId.split('-')[0];
 
-      updatePositionIfColorIsYellow(roll, piece);
-
-      updatePositionIfColorIsGreen(roll, piece);
-
-      updatePositionIfColorIsRed(roll, piece);
-
-      bool killed = killPieces(pieces[i], safePositions, pieces);
-
-      if (killed) {
-        playSound('kill');
-      } else {
-        playSound('move');
-      }
-
-      break;
-    }
+  if(aboutToEnterHome(position)){
+    handleAboutToEnterHomePosition(roll, position, piece, color, ref);
+  }else{
+    handleOtherPosition(roll, position, piece, color, ref);
   }
 
-  ref.read(piecesProvider.notifier).setPieces(pieces);
+  bool killed = killPieces(pieceId, ref);
+
+  if (killed) {
+    playSound('kill');
+  } else {
+    playSound('move');
+  }
 }
 
-bool killPieces(Piece piece, List<int> safePositions, List<Piece> pieces) {
-  String position = piece.position;
-  String pieceId = piece.id;
+bool killPieces(String pieceId, WidgetRef ref) {
+  List<int> safePositions = ref.watch(safePositionsProvider);
+  List<Piece> pieces = ref.watch(piecesProvider);
+
+  String position = pieces.where((piece) => piece.id == pieceId).first.position;
 
   bool killed = false;
-  if (!position.contains('-') && !safePositions.contains(int.parse(position))) {
-    List<Piece> piecesToBeKilled = pieces
-        .where(
-          (p) =>
-              p.position == position &&
-              !p.id.contains(
-                pieceId.split('-')[0],
-              ),
-        )
-        .toList();
+  if (shouldKill(position, safePositions)) {
+    // used for not killing its friends determined by the same color
+    final color = pieceId.split('-')[0];
+
+    List<Piece> piecesToBeKilled = getPiecesForKilling(pieces, position, color);
 
     for (int i = 0; i < piecesToBeKilled.length; i++) {
       piecesToBeKilled[i].freedFromPrison = false;
@@ -60,161 +55,101 @@ bool killPieces(Piece piece, List<int> safePositions, List<Piece> pieces) {
       piecesToBeKilled[i].position = '';
     }
 
-    if (piecesToBeKilled.isNotEmpty) {
-      killed = true;
-    }
+    ref
+        .read(piecesProvider.notifier)
+        .replaceProvidedPiecesOnly(piecesToBeKilled);
+
+    killed = piecesToBeKilled.isNotEmpty;
   }
   return killed;
 }
 
-void updatePositionIfColorIsRed(int add, Piece piece) {
-  String currentPosition = piece.position;
-  final color = piece.id.split('-')[0];
-  if (color == 'red') {
-    if (!currentPosition.contains('-')) {
-      int nextPosition = int.parse(currentPosition) + add;
-      if (nextPosition > 52) {
-        nextPosition = nextPosition - 52;
-      }
-      if (nextPosition >= 40 && nextPosition <= 46) {
-        piece.insideHomeArea = true;
-      }
-      if (nextPosition > 46 && piece.insideHomeArea) {
-        int difference = nextPosition - 46;
-        piece.position = 'r-$difference';
-      } else {
-        piece.position = nextPosition.toString();
-      }
+List<Piece> getPiecesForKilling(
+    List<Piece> pieces, String position, String color) {
+  return pieces
+      .where(
+        (p) =>
+            p.position == position &&
+            !p.id.contains(
+              color,
+            ),
+      )
+      .toList();
+}
+
+bool shouldKill(String position, List<int> safePositions) {
+  return !aboutToEnterHome(position) &&
+      !isSafePosition(position, safePositions);
+}
+
+bool aboutToEnterHome(String position) {
+  return position.contains('-');
+}
+
+bool isSafePosition(String position, List<int> safePositions) {
+  return safePositions.contains(int.parse(position));
+}
+
+void handleAboutToEnterHomePosition(
+    int roll, String position, Piece piece, String color, WidgetRef ref) {
+  List<String> splitted = position.split('-');
+  int currentNum = int.parse(splitted[1]);
+  int leftToReachHome = 6 - currentNum;
+
+  String positionPrefix = color[0].toLowerCase();
+
+  if (roll <= leftToReachHome) {
+    int nextPosition = currentNum + roll;
+
+    if (nextPosition > 5) {
+      piece.insideHome = true;
+      piece.position = '$positionPrefix-$nextPosition';
     } else {
-      List<String> splitted = currentPosition.split('-');
-      int currentNum = int.parse(splitted[1]);
-      int leftToReachHome = 6 - currentNum;
-
-      if (add <= leftToReachHome) {
-        int nextPosition = currentNum + add;
-
-        if (nextPosition > 5) {
-          piece.insideHome = true;
-          piece.position = 'r-$nextPosition';
-        } else {
-          piece.position = 'r-$nextPosition';
-        }
-      }
+      piece.position = '$positionPrefix-$nextPosition';
     }
+    ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
   }
 }
 
-void updatePositionIfColorIsGreen(int add, Piece piece) {
-  String currentPosition = piece.position;
-  final color = piece.id.split('-')[0];
-  if (color == 'green') {
-    if (!currentPosition.contains('-')) {
-      int nextPosition = int.parse(currentPosition) + add;
-      if (nextPosition > 52) {
-        nextPosition = nextPosition - 52;
-      }
-      if (nextPosition >= 27 && nextPosition <= 33) {
-        piece.insideHomeArea = true;
-      }
-      if (nextPosition > 33 && piece.insideHomeArea) {
-        int difference = nextPosition - 33;
-        piece.position = 'g-$difference';
-      } else {
-        piece.position = nextPosition.toString();
-      }
-    } else {
-      List<String> splitted = currentPosition.split('-');
-      int currentNum = int.parse(splitted[1]);
-      int leftToReachHome = 6 - currentNum;
+void handleOtherPosition(int roll, String position, Piece piece, String color, WidgetRef ref) {
+  if (!aboutToEnterHome(position)) {
+    int nextPosition = int.parse(position) + roll;
 
-      if (add <= leftToReachHome) {
-        int nextPosition = currentNum + add;
+    // as the greatest position any pieces can travel is 52 and if 52 is crossed then
+    // position will start from 1 again depending upon roll
 
-        if (nextPosition > 5) {
-          piece.insideHome = true;
-          piece.position = 'g-$nextPosition';
-        } else {
-          piece.position = 'g-$nextPosition';
-        }
-      }
+    if (nextPosition > 52) {
+      nextPosition = nextPosition - 52;
     }
+
+    if (enteredInsideHomeArea(color, nextPosition)) {
+      piece.insideHomeArea = true;
+    }
+
+    if (willCrossMaxPosition(color, nextPosition) && piece.insideHomeArea) {
+      int max = insideHomeAreaCriteria[color]!.last;
+
+      int difference = nextPosition - max;
+
+      final positionPrefix = color[0].toLowerCase();
+
+      piece.position = '$positionPrefix-$difference';
+    } else {
+      piece.position = nextPosition.toString();
+    }
+
+    ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
   }
 }
 
-void updatePositionIfColorIsYellow(int add, Piece piece) {
-  String currentPosition = piece.position;
-  final color = piece.id.split('-')[0];
-
-  if (color == 'yellow') {
-    if (!currentPosition.contains('-')) {
-      int nextPosition = int.parse(currentPosition) + add;
-      if (nextPosition > 52) {
-        nextPosition = nextPosition - 52;
-      }
-      if (nextPosition >= 14 && nextPosition <= 20) {
-        piece.insideHomeArea = true;
-      }
-      if (nextPosition > 20 && piece.insideHomeArea) {
-        int difference = nextPosition - 20;
-        piece.position = 'y-$difference';
-      } else {
-        piece.position = nextPosition.toString();
-      }
-    } else {
-      List<String> splitted = currentPosition.split('-');
-      int currentNum = int.parse(splitted[1]);
-      int leftToReachHome = 6 - currentNum;
-
-      if (add <= leftToReachHome) {
-        int nextPosition = currentNum + add;
-
-        if (nextPosition > 5) {
-          piece.insideHome = true;
-          piece.position = 'y-$nextPosition';
-        } else {
-          piece.position = 'y-$nextPosition';
-        }
-      }
-    }
-  }
+bool willCrossMaxPosition(String color, int nextPosition) {
+  final max = insideHomeAreaCriteria[color]!.last;
+  return nextPosition > max;
 }
 
-void updatePositionIfColorIsBlue(int add, Piece piece) {
-  final currentPosition = piece.position;
-  final color = piece.id.split('-')[0];
+bool enteredInsideHomeArea(String color, int nextPosition) {
+  final min = insideHomeAreaCriteria[color]!.first;
+  final max = insideHomeAreaCriteria[color]!.last;
 
-  if (color == 'blue') {
-    if (!currentPosition.contains('-')) {
-      int nextPosition = int.parse(currentPosition) + add;
-      if (nextPosition > 52) {
-        nextPosition = nextPosition - 52;
-      }
-
-      if (nextPosition >= 1 && nextPosition <= 7) {
-        piece.insideHomeArea = true;
-      }
-
-      if (nextPosition > 7 && piece.insideHomeArea) {
-        int difference = nextPosition - 7;
-        piece.position = 'b-$difference';
-      } else {
-        piece.position = nextPosition.toString();
-      }
-    } else {
-      List<String> splitted = currentPosition.split('-');
-      int currentNum = int.parse(splitted[1]);
-      int leftToReachHome = 6 - currentNum;
-
-      if (add <= leftToReachHome) {
-        int nextPosition = currentNum + add;
-
-        if (nextPosition > 5) {
-          piece.insideHome = true;
-          piece.position = 'b-$nextPosition';
-        } else {
-          piece.position = 'b-$nextPosition';
-        }
-      }
-    }
-  }
+  return nextPosition >= min && nextPosition <= max;
 }
