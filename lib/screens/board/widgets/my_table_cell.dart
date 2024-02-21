@@ -45,7 +45,6 @@ class MyTableCell extends ConsumerWidget {
   void clickPiece(String pieceId, WidgetRef ref, BuildContext context) {
     final diceState = ref.watch(diceStateProvider);
     final pieces = ref.watch(piecesProvider);
-    final safePositions = ref.watch(safePositionsProvider);
 
     if (!shouldUpdatePiecePosition(pieceId, diceState, pieces)) {
       playSound('error');
@@ -54,7 +53,7 @@ class MyTableCell extends ConsumerWidget {
 
     ref.read(clickedPieceProvider.notifier).setClickedPiece(pieceId);
 
-    updatePiecePosition(pieceId, diceState.roll, safePositions);
+    updatePiecePosition(pieceId, diceState.roll, ref);
 
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
 
@@ -113,11 +112,12 @@ class MyTableCell extends ConsumerWidget {
           diceState.rolledBy,
           () {
             clickPiece(
-              getPieceId(colPosition, diceState.rolledBy),
+              getPieceId(colPosition, diceState.rolledBy, ref),
               ref,
               context,
             );
           },
+          ref,
         ),
       ),
     );

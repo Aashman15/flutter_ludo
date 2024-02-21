@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
-import 'package:ludo/data/pieces.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
 import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
@@ -14,7 +13,7 @@ class Prison extends ConsumerWidget {
 
   final String color;
 
-  List<Piece> getColorPieces() {
+  List<Piece> getColorPieces(List<Piece> pieces) {
     return pieces.where((piece) => piece.id.contains(color)).toList();
   }
 
@@ -79,24 +78,39 @@ class Prison extends ConsumerWidget {
   }
 
   List<SizedBox> getSizedPieceButtons(List<Piece> pieces) {
-    return pieces
-        .map((piece) => SizedBox(
-              height: 20,
-              width: 20,
-              child: piece.freedFromPrison ? getButtonSlot() : piece.button,
-            ))
-        .toList();
+    List<SizedBox> sizedButtons = [];
+    for (int i = 0; i < 4; i++) {
+      if (pieces.length > i) {
+        sizedButtons.add(
+          getSizedButton(
+              pieces[i].freedFromPrison ? getButtonSlot() : pieces[i].button),
+        );
+      } else {
+        sizedButtons.add(getSizedButton(getButtonSlot()));
+      }
+    }
+    return sizedButtons;
+  }
+
+  SizedBox getSizedButton(Widget child) {
+    return SizedBox(
+      height: 20,
+      width: 20,
+      child: child,
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Piece> pieces = getColorPieces();
+    List<Piece> pieces = ref.watch(piecesProvider);
+    List<Piece> piecesOfColor = getColorPieces(pieces);
 
-    setOnPressedForUnFreedPieces(pieces, ref);
+    setOnPressedForUnFreedPieces(piecesOfColor, ref);
 
-    List<SizedBox> buttons = getSizedPieceButtons(pieces);
+    List<SizedBox> buttons = getSizedPieceButtons(piecesOfColor);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,

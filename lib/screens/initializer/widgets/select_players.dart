@@ -12,6 +12,7 @@ class SelectPlayers extends ConsumerWidget {
     final read = ref.read(initialStateProvider.notifier);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Text('Select or unselect players: *at least 2'),
         Row(

@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/models/board_initial_state.dart';
 import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
+import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/utils/should_move.dart';
 import 'package:ludo/utils/sound_utils.dart';
@@ -13,19 +15,28 @@ final randomizer = Random();
 class DiceRoller extends ConsumerWidget {
   const DiceRoller({super.key});
 
-  void rollDice(WidgetRef ref, DiceState diceState) {
+  void rollDice(
+      WidgetRef ref, DiceState diceState, BoardInitialState initialState) {
     if (!diceState.shouldRoll) {
       playSound('error');
       return;
     }
+
+    ref.read(clickedPieceProvider.notifier).setClickedPiece('');
 
     int currentRoll = randomizer.nextInt(6) + 1;
 
     diceState.roll = currentRoll;
     diceState.rolledBy = diceState.nextRoller;
 
-    if (currentRoll != 6 || currentRoll != 1) {
+    if (diceState.rolledBy.isEmpty) {
+      diceState.rolledBy = initialState.selectedColors.first;
+    }
+
+    if (currentRoll != 6 && currentRoll != 1) {
       diceState.nextRoller = getNextRoller(diceState.rolledBy, ref);
+    } else {
+      diceState.nextRoller = diceState.rolledBy;
     }
 
     updateShouldRoll(ref);
@@ -62,6 +73,11 @@ class DiceRoller extends ConsumerWidget {
     final boardInitialState = ref.watch(initialStateProvider);
 
     var currentColor = diceState.nextRoller;
+
+    if (!diceState.shouldRoll) {
+      currentColor = diceState.rolledBy;
+    }
+
     var currentRoll = diceState.roll;
 
     if (currentColor.isEmpty) {
@@ -74,7 +90,7 @@ class DiceRoller extends ConsumerWidget {
       children: [
         InkWell(
           onTap: () {
-            rollDice(ref, diceState);
+            rollDice(ref, diceState, boardInitialState);
           },
           child: Image.asset(
             'assets/images/dice-$currentColor-$currentRoll.png',

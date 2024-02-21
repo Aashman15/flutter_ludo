@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/models/piece.dart';
-import 'package:ludo/data/pieces.dart';
+import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
 
 // if position matches then return piece id
 // if more than one piece found with same position then return piece id of active color
-String getPieceId(String position, String activeColor) {
+String getPieceId(String position, String activeColor, WidgetRef ref) {
+ List<Piece> pieces =  ref.watch(piecesProvider);
+
   List<Piece> filteredPieces =
       pieces.where((piece) => piece.position == position).toList();
 
@@ -31,7 +34,9 @@ String getPieceId(String position, String activeColor) {
 // if position matches then return button adding onPressed method
 // if more than one piece with same position found then return button with active color adding onPressed method
 Widget getTableCellChild(
-    String position, String activeColor, void Function() onPieceClick) {
+    String position, String activeColor, void Function() onPieceClick, WidgetRef ref) {
+   List<Piece> pieces = ref.watch(piecesProvider);
+
   List<Piece> filteredPieces =
       pieces.where((piece) => piece.position == position).toList();
 

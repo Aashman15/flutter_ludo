@@ -13,21 +13,21 @@ class LudoBoardInitializerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InitializerHeader(),
-            SizedBox(height: 30),
-            BoardImage(),
-            SizedBox(height: 30),
-            SelectPlayers(),
-            SizedBox(height: 10),
-            SelectFirstTurn(),
-            SizedBox(height: 10),
-            SelectNoOfPieces(),
-            SizedBox(height: 30),
-            Play(),
-          ],
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InitializerHeader(),
+              SizedBox(height: 30),
+              BoardImage(),
+              SizedBox(height: 30),
+              SelectPlayers(),
+              SizedBox(height: 10),
+              SelectFirstTurn(),
+              SizedBox(height: 10),
+              SelectNoOfPieces(),
+              SizedBox(height: 30),
+              Play(),
+            ],
         ),
       ),
     );
