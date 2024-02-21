@@ -34,6 +34,22 @@ void playSound(String sound) {
       showNotification: true,
     );
   }
+
+  if (sound == 'enterHome') {
+    player.open(
+      Audio("assets/sounds/enter-home.mp3"),
+      autoStart: true,
+      showNotification: true,
+    );
+  }
+
+  if (sound == 'congratulations') {
+    player.open(
+      Audio("assets/sounds/congratulations.mp3"),
+      autoStart: true,
+      showNotification: true,
+    );
+  }
 }
 
 

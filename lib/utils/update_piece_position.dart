@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/models/piece.dart';
+import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/providers/safe_zones_provider.dart';
 import 'package:ludo/utils/sound_utils.dart';
@@ -20,9 +21,9 @@ void updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
 
   String color = pieceId.split('-')[0];
 
-  if(aboutToEnterHome(position)){
+  if (aboutToEnterHome(position)) {
     handleAboutToEnterHomePosition(roll, position, piece, color, ref);
-  }else{
+  } else {
     handleOtherPosition(roll, position, piece, color, ref);
   }
 
@@ -30,6 +31,9 @@ void updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
 
   if (killed) {
     playSound('kill');
+    playSound('enterHome');
+    ref.read(diceStateProvider.notifier).setShouldRoll(true);
+    ref.read(diceStateProvider.notifier).setNextRoller(color);
   } else {
     playSound('move');
   }
@@ -42,12 +46,12 @@ bool killPieces(String pieceId, WidgetRef ref) {
   String position = pieces.where((piece) => piece.id == pieceId).first.position;
 
   bool killed = false;
-  if (shouldKill(position, safePositions)) {
-    // used for not killing its friends determined by the same color
-    final color = pieceId.split('-')[0];
 
-    List<Piece> piecesToBeKilled = getPiecesForKilling(pieces, position, color);
+  // used for not killing its friends determined by the same color
+  final color = pieceId.split('-')[0];
+  List<Piece> piecesToBeKilled = getPiecesForKilling(pieces, position, color);
 
+  if (shouldKill(position, safePositions, piecesToBeKilled)) {
     for (int i = 0; i < piecesToBeKilled.length; i++) {
       piecesToBeKilled[i].freedFromPrison = false;
       piecesToBeKilled[i].insideHome = false;
@@ -77,9 +81,11 @@ List<Piece> getPiecesForKilling(
       .toList();
 }
 
-bool shouldKill(String position, List<int> safePositions) {
+bool shouldKill(
+    String position, List<int> safePositions, List<Piece> piecesToBeKilled) {
   return !aboutToEnterHome(position) &&
-      !isSafePosition(position, safePositions);
+      !isSafePosition(position, safePositions) &&
+      piecesToBeKilled.isNotEmpty;
 }
 
 bool aboutToEnterHome(String position) {
@@ -104,6 +110,9 @@ void handleAboutToEnterHomePosition(
     if (nextPosition > 5) {
       piece.insideHome = true;
       piece.position = '$positionPrefix-$nextPosition';
+      playSound('enterHome');
+      ref.read(diceStateProvider.notifier).setShouldRoll(true);
+      ref.read(diceStateProvider.notifier).setNextRoller(color);
     } else {
       piece.position = '$positionPrefix-$nextPosition';
     }
@@ -111,7 +120,8 @@ void handleAboutToEnterHomePosition(
   }
 }
 
-void handleOtherPosition(int roll, String position, Piece piece, String color, WidgetRef ref) {
+void handleOtherPosition(
+    int roll, String position, Piece piece, String color, WidgetRef ref) {
   if (!aboutToEnterHome(position)) {
     int nextPosition = int.parse(position) + roll;
 

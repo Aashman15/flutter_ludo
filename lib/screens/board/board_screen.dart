@@ -18,13 +18,26 @@ class BoardScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(message),
-            const SizedBox(height: 50),
-            const FirstRow(),
-            const SizedBox(height: 10),
-            const SecondRow(),
-            const SizedBox(height: 10),
-            const ThirdRow()
+            Text(
+              message,
+              style: const TextStyle(
+                  color: Colors.purple, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              color: const Color.fromARGB(255, 234, 228, 236),
+              padding: const EdgeInsets.only(bottom: 45),
+              child: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 50),
+                  FirstRow(),
+                  SizedBox(height: 10),
+                  SecondRow(),
+                  SizedBox(height: 10),
+                  ThirdRow()
+                ],
+              ),
+            )
           ],
         ),
       ),

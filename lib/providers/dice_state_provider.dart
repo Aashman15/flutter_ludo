@@ -20,6 +20,15 @@ class DiceStateProvider extends StateNotifier<DiceState> {
       shouldRoll: shouldRoll,
     );
   }
+
+  void setNextRoller(String nextRoller){
+    state =  DiceState(
+      rolledBy: state.rolledBy,
+      roll: state.roll,
+      nextRoller: nextRoller,
+      shouldRoll: state.shouldRoll,
+    );
+  }
 }
 
 final diceStateProvider = StateNotifierProvider<DiceStateProvider, DiceState>(

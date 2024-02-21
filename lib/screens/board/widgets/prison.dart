@@ -83,19 +83,21 @@ class Prison extends ConsumerWidget {
       if (pieces.length > i) {
         sizedButtons.add(
           getSizedButton(
-              pieces[i].freedFromPrison ? getButtonSlot() : pieces[i].button),
+            pieces[i].freedFromPrison ? getButtonSlot() : pieces[i].button,
+          ),
         );
       } else {
         sizedButtons.add(getSizedButton(getButtonSlot()));
       }
     }
+
     return sizedButtons;
   }
 
   SizedBox getSizedButton(Widget child) {
     return SizedBox(
-      height: 20,
-      width: 20,
+      height: 30,
+      width: 30,
       child: child,
     );
   }
@@ -104,6 +106,12 @@ class Prison extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<Piece> pieces = ref.watch(piecesProvider);
     List<Piece> piecesOfColor = getColorPieces(pieces);
+
+    piecesOfColor.sort((piece1, piece2) {
+      int a = int.parse(piece1.id.split('-').last);
+      int b = int.parse(piece2.id.split('-').last);
+      return a.compareTo(b);
+    });
 
     setOnPressedForUnFreedPieces(piecesOfColor, ref);
 

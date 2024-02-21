@@ -73,6 +73,7 @@ class MyTableCell extends ConsumerWidget {
 
     if (piecesInsideHomeLength == boardInitialState.selectedColors.length) {
       congratsDialog(context, diceState.rolledBy);
+      playSound('congratulations');
     }
   }
 
@@ -111,6 +112,21 @@ class MyTableCell extends ConsumerWidget {
     return null;
   }
 
+  Color? getColorForAboutToEnterHomeArea(String colPosition, String color){
+   if(colPosition.contains('-')){
+     if(color == 'blue'){
+       return const Color.fromARGB(80, 33, 150, 243);
+     }else if(color == 'yellow'){
+       return const Color.fromARGB(80, 255, 235, 59);
+     }else if(color =='green' ){
+       return const Color.fromARGB(80, 76, 175, 80);
+     }else if(color == 'red'){
+       return const Color.fromARGB(80, 244, 67, 54);
+     }
+   }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
@@ -118,6 +134,7 @@ class MyTableCell extends ConsumerWidget {
     return TableCell(
       key: Key(colPosition.toString()),
       child: Container(
+        color: getColorForAboutToEnterHomeArea(colPosition, color),
         height: getHeightForTableCell(color),
         decoration: getDecoration(colPosition, ref),
         child: getTableCellChild(
