@@ -5,6 +5,7 @@ import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/screens/board/widgets/first_row.dart';
 import 'package:ludo/screens/board/widgets/second_row.dart';
 import 'package:ludo/screens/board/widgets/third_row.dart';
+import 'package:ludo/utils/congrats_dialog.dart';
 
 class BoardScreen extends ConsumerWidget {
   const BoardScreen({super.key});
@@ -15,8 +16,12 @@ class BoardScreen extends ConsumerWidget {
     String message = diceState.shouldRoll ? 'Roll' : 'Move';
 
     return PopScope(
-      canPop: true,
+      canPop: false,
       onPopInvoked: (didPop) {
+        if(didPop){
+          return;
+        }
+        showPopScreenConfirmationDialog(context);
         ref.read(diceStateProvider.notifier).resetState();
         ref.read(piecesProvider.notifier).resetState();
       },

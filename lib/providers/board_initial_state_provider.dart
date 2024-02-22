@@ -9,8 +9,7 @@ Map<String, int> colorOrder = {
   'red': 3,
 };
 
-
-void sortColors(List<String> colors){
+void sortColors(List<String> colors) {
   colors.sort((a, b) => colorOrder[a]!.compareTo(colorOrder[b]!));
 }
 
@@ -20,7 +19,7 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
           boardInitialState,
         );
 
-  void setState(BoardInitialState state){
+  void setState(BoardInitialState state) {
     state = state;
   }
 
@@ -42,7 +41,8 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
 
   void selectOrDisSelectColor(String color) {
     if (state.selectedColors.contains(color)) {
-      final selectedColors = state.selectedColors.where((c) => c != color).toList();
+      final selectedColors =
+          state.selectedColors.where((c) => c != color).toList();
       // sorting is required as the list gets used later in the process for providing turn to a roller
       sortColors(selectedColors);
 
@@ -57,7 +57,7 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
 
       state = BoardInitialState(
         state.numberOfPieces,
-        [...state.selectedColors, color],
+        selectedColors,
         state.firstTurn,
       );
     }

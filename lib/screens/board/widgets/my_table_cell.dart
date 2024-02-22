@@ -72,7 +72,7 @@ class MyTableCell extends ConsumerWidget {
         .length;
 
     if (piecesInsideHomeLength == boardInitialState.numberOfPieces) {
-      congratsDialog(context, diceState.rolledBy);
+      showCongratsDialog(context, diceState.rolledBy);
       playSound('congratulations');
     }
   }
