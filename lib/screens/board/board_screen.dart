@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
-import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/screens/board/widgets/first_row.dart';
 import 'package:ludo/screens/board/widgets/second_row.dart';
 import 'package:ludo/screens/board/widgets/third_row.dart';
-import 'package:ludo/utils/congrats_dialog.dart';
+import 'package:ludo/utils/dialogs.dart';
 
 class BoardScreen extends ConsumerWidget {
   const BoardScreen({super.key});

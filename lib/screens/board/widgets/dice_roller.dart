@@ -160,7 +160,7 @@ class DiceRoller extends ConsumerWidget {
     var currentRoll = diceState.roll;
 
     if (currentColor.isEmpty) {
-      currentColor = boardInitialState.firstTurn;
+      currentColor = boardInitialState.selectedColors[0];
       currentRoll = 1;
     }
 

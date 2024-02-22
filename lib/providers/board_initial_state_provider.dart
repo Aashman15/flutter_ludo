@@ -27,15 +27,6 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
     state = BoardInitialState(
       int.parse(number),
       state.selectedColors,
-      state.firstTurn,
-    );
-  }
-
-  void selectFirstTurn(String color) {
-    state = BoardInitialState(
-      state.numberOfPieces,
-      state.selectedColors,
-      color,
     );
   }
 
@@ -49,7 +40,6 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
       state = BoardInitialState(
         state.numberOfPieces,
         selectedColors,
-        state.firstTurn,
       );
     } else {
       final selectedColors = [...state.selectedColors, color];
@@ -58,7 +48,6 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
       state = BoardInitialState(
         state.numberOfPieces,
         selectedColors,
-        state.firstTurn,
       );
     }
   }

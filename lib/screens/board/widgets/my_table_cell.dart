@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/providers/safe_zones_provider.dart';
-import 'package:ludo/utils/congrats_dialog.dart';
+import 'package:ludo/utils/dialogs.dart';
 import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
@@ -72,8 +72,7 @@ class MyTableCell extends ConsumerWidget {
         .length;
 
     if (piecesInsideHomeLength == boardInitialState.numberOfPieces) {
-      showCongratsDialog(context, diceState.rolledBy);
-      playSound('congratulations');
+      showCongratsDialog(context, diceState.rolledBy, ref);
     }
   }
 

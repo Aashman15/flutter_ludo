@@ -149,6 +149,12 @@ void handleOtherPosition(
     }
 
     ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
+    if(piece.position.contains('-')){
+      if(int.parse(piece.position.split('-')[1]) >= 6){
+        piece.insideHome = true;
+        playSound('enterHome');
+      }
+    }
   }
 }
 

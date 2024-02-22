@@ -6,3 +6,8 @@ other todos
 5) should include back button in board screen and confirmation exit
 6) save the progress in local storage for continue previous game feature
 7) dialog to continue previous game at the start of application
+
+Bugs
+============
+1) already won team getting turn to roll again :
+for now it is covered by not letting players play for second and so on positions.
