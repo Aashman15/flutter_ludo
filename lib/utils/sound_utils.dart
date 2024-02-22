@@ -10,6 +10,7 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
   if (sound == 'roll') {
     player.open(
@@ -17,6 +18,7 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
 
   if (sound == 'move') {
@@ -25,6 +27,7 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
 
   if (sound == 'kill') {
@@ -33,6 +36,7 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
 
   if (sound == 'enterHome') {
@@ -41,6 +45,7 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
 
   if (sound == 'congratulations') {
@@ -49,7 +54,18 @@ void playSound(String sound) {
       autoStart: true,
       showNotification: true,
     );
+    return;
   }
+
+  if(sound == 'rolledOneThrice'){
+    player.open(
+      Audio("assets/sounds/rolled-one-thrice.mp3"),
+      autoStart: true,
+      showNotification: true,
+    );
+    return;
+  }
+
 }
 
 

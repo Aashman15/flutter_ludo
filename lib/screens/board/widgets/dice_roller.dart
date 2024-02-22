@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/models/board_initial_state.dart';
 import 'package:ludo/models/dice.state.dart';
+import 'package:ludo/models/piece.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
 import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
+import 'package:ludo/providers/pieces_provider.dart';
+import 'package:ludo/providers/roll-one-repeated_count_provider.dart';
 import 'package:ludo/utils/should_move.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
@@ -21,7 +24,6 @@ class DiceRoller extends ConsumerWidget {
       playSound('error');
       return;
     }
-    playSound('roll');
 
     ref.read(clickedPieceProvider.notifier).setClickedPiece('');
 
@@ -34,13 +36,89 @@ class DiceRoller extends ConsumerWidget {
       diceState.rolledBy = initialState.selectedColors.first;
     }
 
+    bool killedRollingOneThrice = false;
+
     if (currentRoll != 6 && currentRoll != 1) {
       diceState.nextRoller = getNextRoller(diceState.rolledBy, ref);
+      ref.read(rollOneRepeatedCountProvider.notifier).resetState();
     } else {
       diceState.nextRoller = diceState.rolledBy;
+      if (currentRoll == 1) {
+        increaseRollOneRepeatedCount(ref, diceState.rolledBy);
+
+        if (getRollOneRepeatedCount(ref) == 3) {
+          bool killed = killPieceOfColorNearestHome(diceState.rolledBy, ref);
+
+          killedRollingOneThrice = killed;
+
+          ref.read(rollOneRepeatedCountProvider.notifier).resetState();
+          ref.watch(diceStateProvider.notifier).setShouldRoll(true);
+        }
+      } else {
+        ref.read(rollOneRepeatedCountProvider.notifier).resetState();
+      }
     }
 
-    updateShouldRoll(ref);
+    if (!killedRollingOneThrice) {
+      updateShouldRoll(ref);
+      playSound('roll');
+    } else {
+      playSound('rolledOneThrice');
+    }
+  }
+
+  int getRollOneRepeatedCount(WidgetRef ref) {
+    return ref.watch(rollOneRepeatedCountProvider).count;
+  }
+
+  void increaseRollOneRepeatedCount(WidgetRef ref, String rolledBy) {
+    ref.read(rollOneRepeatedCountProvider.notifier).increaseRepeated(rolledBy);
+  }
+
+  bool killPieceOfColorNearestHome(String color, WidgetRef ref) {
+    final pieces = ref.watch(piecesProvider);
+
+    List<Piece> freedPiecesOfColor =
+        pieces.where((p) => p.id.contains(color) && p.freedFromPrison).toList();
+
+    if (freedPiecesOfColor.isNotEmpty) {
+      Piece piece = getTheNearestHomePiece(freedPiecesOfColor);
+
+      piece.freedFromPrison = false;
+      piece.insideHome = false;
+      piece.insideHomeArea = false;
+      piece.position = '';
+
+      ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
+
+      return true;
+    }
+    return false;
+  }
+
+  Piece getTheNearestHomePiece(List<Piece> pieces) {
+    List<Piece> piecesNotAboutToEnterHome =
+        pieces.where((p) => !p.position.contains('-')).toList();
+
+    List<Piece> piecesAboutToEnterHome =
+        pieces.where((p) => p.position.contains('-')).toList();
+
+    if (piecesAboutToEnterHome.isNotEmpty) {
+      piecesAboutToEnterHome.sort((a, b) =>
+          getNumberFromNearestHomePosition(a.position)
+              .compareTo(getNumberFromNearestHomePosition(b.position)));
+
+      return piecesAboutToEnterHome.last;
+    } else {
+      piecesNotAboutToEnterHome.sort(
+          (a, b) => int.parse(a.position).compareTo(int.parse(b.position)));
+
+      return piecesNotAboutToEnterHome.last;
+    }
+  }
+
+  int getNumberFromNearestHomePosition(String position) {
+    return int.parse(position.split('-')[1]);
   }
 
   void updateShouldRoll(WidgetRef ref) {
