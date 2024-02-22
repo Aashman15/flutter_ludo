@@ -53,14 +53,24 @@ class MyTableCell extends ConsumerWidget {
 
     ref.read(clickedPieceProvider.notifier).setClickedPiece(pieceId);
 
-    updatePiecePosition(pieceId, diceState.roll, ref);
+    String result = updatePiecePosition(pieceId, diceState.roll, ref);
 
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
 
-    congratsIfNeeded(ref, context);
+    bool congratulated = congratsIfNeeded(ref, context);
+
+    if (congratulated) {
+      playSound('congratulations');
+    } else if (result.contains('movedAndKilled')) {
+      playSound('kill');
+    } else if (result.contains('justMoved')) {
+      playSound('move');
+    }else if(result.contains('enteredHome')){
+      playSound('enterHome');
+    }
   }
 
-  void congratsIfNeeded(WidgetRef ref, BuildContext context) {
+  bool congratsIfNeeded(WidgetRef ref, BuildContext context) {
     final diceState = ref.watch(diceStateProvider);
     final pieces = ref.watch(piecesProvider);
     final boardInitialState = ref.watch(boardInitialStateProvider);
@@ -73,7 +83,9 @@ class MyTableCell extends ConsumerWidget {
 
     if (piecesInsideHomeLength == boardInitialState.numberOfPieces) {
       showCongratsDialog(context, diceState.rolledBy, ref);
+      return true;
     }
+    return false;
   }
 
   bool shouldUpdatePiecePosition(
@@ -99,30 +111,30 @@ class MyTableCell extends ConsumerWidget {
     return true;
   }
 
-  double? getHeightForTableCell(color){
-    if(color == 'blue' || color == 'green'){
+  double? getHeightForTableCell(color) {
+    if (color == 'blue' || color == 'green') {
       return 30;
     }
 
-    if(color == 'red' || color == 'yellow'){
+    if (color == 'red' || color == 'yellow') {
       return 35;
     }
 
     return null;
   }
 
-  Color? getColorForAboutToEnterHomeArea(String colPosition, String color){
-   if(colPosition.contains('-')){
-     if(color == 'blue'){
-       return const Color.fromARGB(80, 33, 150, 243);
-     }else if(color == 'yellow'){
-       return const Color.fromARGB(80, 255, 235, 59);
-     }else if(color =='green' ){
-       return const Color.fromARGB(80, 76, 175, 80);
-     }else if(color == 'red'){
-       return const Color.fromARGB(80, 244, 67, 54);
-     }
-   }
+  Color? getColorForAboutToEnterHomeArea(String colPosition, String color) {
+    if (colPosition.contains('-')) {
+      if (color == 'blue') {
+        return const Color.fromARGB(80, 33, 150, 243);
+      } else if (color == 'yellow') {
+        return const Color.fromARGB(80, 255, 235, 59);
+      } else if (color == 'green') {
+        return const Color.fromARGB(80, 76, 175, 80);
+      } else if (color == 'red') {
+        return const Color.fromARGB(80, 244, 67, 54);
+      }
+    }
     return null;
   }
 

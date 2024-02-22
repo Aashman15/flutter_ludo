@@ -12,7 +12,7 @@ const Map<String, List<int>> insideHomeAreaCriteria = {
   'red': [40, 46],
 };
 
-void updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
+String updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
   final pieces = ref.watch(piecesProvider);
 
   final piece = pieces.where((piece) => pieceId == piece.id).first;
@@ -21,22 +21,22 @@ void updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
 
   String color = pieceId.split('-')[0];
 
+  String response = '';
+
   if (aboutToEnterHome(position)) {
-    handleAboutToEnterHomePosition(roll, position, piece, color, ref);
+   response = handleAboutToEnterHomePosition(roll, position, piece, color, ref);
   } else {
-    handleOtherPosition(roll, position, piece, color, ref);
+  response =  handleOtherPosition(roll, position, piece, color, ref);
   }
 
   bool killed = killPieces(pieceId, ref);
 
   if (killed) {
-    playSound('kill');
-    playSound('enterHome');
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
     ref.read(diceStateProvider.notifier).setNextRoller(color);
-  } else {
-    playSound('move');
+    response =  'movedAndKilled';
   }
+  return response;
 }
 
 bool killPieces(String pieceId, WidgetRef ref) {
@@ -96,7 +96,7 @@ bool isSafePosition(String position, List<int> safePositions) {
   return safePositions.contains(int.parse(position));
 }
 
-void handleAboutToEnterHomePosition(
+String handleAboutToEnterHomePosition(
     int roll, String position, Piece piece, String color, WidgetRef ref) {
   List<String> splitted = position.split('-');
   int currentNum = int.parse(splitted[1]);
@@ -110,17 +110,18 @@ void handleAboutToEnterHomePosition(
     if (nextPosition > 5) {
       piece.insideHome = true;
       piece.position = '$positionPrefix-$nextPosition';
-      playSound('enterHome');
       ref.read(diceStateProvider.notifier).setShouldRoll(true);
       ref.read(diceStateProvider.notifier).setNextRoller(color);
+      return 'enteredHome';
     } else {
       piece.position = '$positionPrefix-$nextPosition';
     }
     ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
   }
+  return 'justMoved';
 }
 
-void handleOtherPosition(
+String handleOtherPosition(
     int roll, String position, Piece piece, String color, WidgetRef ref) {
   if (!aboutToEnterHome(position)) {
     int nextPosition = int.parse(position) + roll;
@@ -152,10 +153,12 @@ void handleOtherPosition(
     if(piece.position.contains('-')){
       if(int.parse(piece.position.split('-')[1]) >= 6){
         piece.insideHome = true;
-        playSound('enterHome');
+        return 'enteredHome';
       }
     }
+    return 'justMoved';
   }
+  return '';
 }
 
 bool willCrossMaxPosition(String color, int nextPosition) {

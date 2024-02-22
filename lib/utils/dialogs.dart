@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
-import 'package:ludo/utils/sound_utils.dart';
 
 String capitalizeFirstLetter(String input) {
   if (input.isEmpty) return input; // Return the string if it's empty
@@ -11,7 +10,6 @@ String capitalizeFirstLetter(String input) {
 
 Future<void> showCongratsDialog(
     BuildContext context, String to, WidgetRef ref) {
-  playSound('congratulations');
   String color = capitalizeFirstLetter(to);
 
   return showDialog<void>(
