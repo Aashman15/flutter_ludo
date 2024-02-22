@@ -8,8 +8,8 @@ class SelectNoOfPieces extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(initialStateProvider);
-    final read = ref.read(initialStateProvider.notifier);
+    final state = ref.watch(boardInitialStateProvider);
+    final read = ref.read(boardInitialStateProvider.notifier);
 
     return Column(
       children: [

@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ludo/screens/board/widgets/my_table_cell.dart';
 
-class GreenArea extends StatefulWidget {
+class GreenArea extends StatelessWidget {
   const GreenArea({super.key});
 
-  @override
-  State<StatefulWidget> createState() {
-    return _GreenAreaState();
-  }
-}
-
-class _GreenAreaState extends State<GreenArea> {
   String getPositionForFirstColumn(int tableRowIndex) {
     switch (tableRowIndex) {
       case 0:

@@ -8,7 +8,7 @@ class SelectFirstTurn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(initialStateProvider);
+    final state = ref.watch(boardInitialStateProvider);
     return Column(
       children: [
         state.selectedColors.isNotEmpty
@@ -23,8 +23,8 @@ class SelectFirstTurn extends ConsumerWidget {
   }
 
   List<Container> getFirstTurnButtons(WidgetRef ref) {
-    final state = ref.watch(initialStateProvider);
-    final read = ref.read(initialStateProvider.notifier);
+    final state = ref.watch(boardInitialStateProvider);
+    final read = ref.read(boardInitialStateProvider.notifier);
 
     return state.selectedColors
         .map(

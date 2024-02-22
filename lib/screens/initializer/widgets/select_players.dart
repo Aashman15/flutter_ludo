@@ -8,8 +8,8 @@ class SelectPlayers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initializerState = ref.watch(initialStateProvider);
-    final read = ref.read(initialStateProvider.notifier);
+    final initializerState = ref.watch(boardInitialStateProvider);
+    final read = ref.read(boardInitialStateProvider.notifier);
 
     return Column(
       mainAxisSize: MainAxisSize.min,

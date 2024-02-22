@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/data/board_initial_state.dart';
 import 'package:ludo/models/board_initial_state.dart';
 
 Map<String, int> colorOrder = {
@@ -16,12 +17,12 @@ void sortColors(List<String> colors){
 class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
   BoardInitialStateProvider()
       : super(
-          BoardInitialState(
-            4,
-            ['blue', 'yellow', 'green', 'red'],
-            'blue',
-          ),
+          boardInitialState,
         );
+
+  void setState(BoardInitialState state){
+    state = state;
+  }
 
   void selectNumberOfPieces(String number) {
     state = BoardInitialState(
@@ -63,7 +64,7 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
   }
 }
 
-final initialStateProvider =
+final boardInitialStateProvider =
     StateNotifierProvider<BoardInitialStateProvider, BoardInitialState>(
   (ref) => BoardInitialStateProvider(),
 );

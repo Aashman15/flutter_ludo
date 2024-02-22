@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/screens/board/widgets/my_table_cell.dart';
 
-class BlueArea extends ConsumerWidget {
+class BlueArea extends StatelessWidget {
   const BlueArea({super.key});
 
   int getPositionForFirstColumn(int tableRowIndex) {
@@ -63,7 +62,7 @@ class BlueArea extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     List<TableRow> tableRows = [];
 
     for (int i = 0; i < 6; i++) {

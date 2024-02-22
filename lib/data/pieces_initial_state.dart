@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
 
-void press() {}
+void emptyVoidCallBack() {}
 
-List<Piece> pieces = [
+final piecesInitialState = [
   Piece(
     id: 'blue-1',
     position: '',
@@ -13,7 +13,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.blue,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -24,7 +24,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.blue,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -35,7 +35,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.blue,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -46,7 +46,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.blue,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -57,7 +57,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.yellow,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -68,7 +68,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.yellow,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -79,7 +79,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.yellow,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -90,7 +90,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.yellow,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -101,7 +101,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.green,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -112,7 +112,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.green,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -123,7 +123,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.green,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -134,7 +134,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.green,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -145,7 +145,7 @@ List<Piece> pieces = [
     position: '',
     button: const PieceButton(
       backgroundColor: Colors.red,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -156,7 +156,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.red,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -167,7 +167,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.red,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
   Piece(
@@ -178,7 +178,7 @@ List<Piece> pieces = [
     insideHomeArea: false,
     button: const PieceButton(
       backgroundColor: Colors.red,
-      onPressed: press,
+      onPressed: emptyVoidCallBack,
     ),
   ),
 ];

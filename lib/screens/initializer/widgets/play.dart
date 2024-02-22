@@ -24,7 +24,7 @@ class Play extends ConsumerWidget {
   }
 
   void play(BuildContext context, WidgetRef ref) {
-    final boardInitialState = ref.watch(initialStateProvider);
+    final boardInitialState = ref.watch(boardInitialStateProvider);
     if (boardInitialState.selectedColors.length < 2) {
       return;
     }

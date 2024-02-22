@@ -1,9 +1,6 @@
 other todos
 ================
-2) work on update piece position function then table_cell_child_util
-3) improve code and make it readable
-4) provide sound for entering home
-5) provide sound for victory
-6) make entering home also give another turn
-7) make killing also give another turn
-8) improve design
+1) improve code and make it readable
+2) improve design, use global theming
+3) getting 1 three times should cut off the piece nearest home
+4) add animation in dice or pieces to determine what to do next i.e move or roll

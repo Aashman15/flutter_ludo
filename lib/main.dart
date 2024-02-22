@@ -6,7 +6,7 @@ void main(List<String> args) {
   runApp(
     const ProviderScope(
       child: MaterialApp(
-        home: LudoBoardInitializerScreen(),
+        home: InitializerScreen(),
       ),
     ),
   );

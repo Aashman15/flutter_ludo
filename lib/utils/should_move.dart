@@ -9,7 +9,7 @@ import 'package:ludo/providers/pieces_provider.dart';
 bool shouldMove(WidgetRef ref) {
   final diceState = ref.watch(diceStateProvider);
   final pieces = ref.watch(piecesProvider);
-  final boardInitialState = ref.watch(initialStateProvider);
+  final boardInitialState = ref.watch(boardInitialStateProvider);
 
   String roller = diceState.rolledBy;
   int roll = diceState.roll;

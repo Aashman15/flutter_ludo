@@ -63,7 +63,7 @@ class MyTableCell extends ConsumerWidget {
   void congratsIfNeeded(WidgetRef ref, BuildContext context) {
     final diceState = ref.watch(diceStateProvider);
     final pieces = ref.watch(piecesProvider);
-    final boardInitialState = ref.watch(initialStateProvider);
+    final boardInitialState = ref.watch(boardInitialStateProvider);
 
     final piecesInsideHomeLength = pieces
         .where(

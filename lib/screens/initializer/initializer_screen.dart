@@ -6,8 +6,8 @@ import 'package:ludo/screens/initializer/widgets/select_first_turn.dart';
 import 'package:ludo/screens/initializer/widgets/select_no_of_pieces.dart';
 import 'package:ludo/screens/initializer/widgets/select_players.dart';
 
-class LudoBoardInitializerScreen extends StatelessWidget {
-  const LudoBoardInitializerScreen({super.key});
+class InitializerScreen extends StatelessWidget {
+  const InitializerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

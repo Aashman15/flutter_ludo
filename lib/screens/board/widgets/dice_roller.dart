@@ -54,7 +54,7 @@ class DiceRoller extends ConsumerWidget {
   }
 
   String getNextRoller(String roller, WidgetRef ref) {
-    final boardInitialState = ref.watch(initialStateProvider);
+    final boardInitialState = ref.watch(boardInitialStateProvider);
 
     final rollers = boardInitialState.selectedColors;
 
@@ -71,7 +71,7 @@ class DiceRoller extends ConsumerWidget {
   @override
   Widget build(context, WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
-    final boardInitialState = ref.watch(initialStateProvider);
+    final boardInitialState = ref.watch(boardInitialStateProvider);
 
     var currentColor = diceState.nextRoller;
 
