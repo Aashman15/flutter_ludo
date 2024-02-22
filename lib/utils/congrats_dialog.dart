@@ -33,7 +33,7 @@ Future<void> showPopScreenConfirmationDialog(
       return AlertDialog(
         title: const Text('Are you sure?'),
         content: const Text(
-          'Are you sure you want to leave this page? If you leave, you will not be continue this game again.',
+          'Are you sure you want to leave this page? If you leave, you will not be able to continue this game again.',
         ),
         actions: <Widget>[
           TextButton(
