@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/providers/board_initial_state_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
 
@@ -10,7 +11,15 @@ String capitalizeFirstLetter(String input) {
 
 Future<void> showCongratsDialog(
     BuildContext context, String to, WidgetRef ref) {
-  String color = capitalizeFirstLetter(to);
+  final color = capitalizeFirstLetter(to);
+
+  var dialogContent = 'Unfortunately, you will not be able to play for other positions. But, we are glad to let you know that the feature is coming soon. But, for now please play another game. Thanks. 😊';
+
+   int selectedColorsLength = ref.read(boardInitialStateProvider).selectedColors.length;
+
+   if(selectedColorsLength <= 2){
+     dialogContent = 'Game has been ended, please play another game. Thanks. 😊';
+   }
 
   return showDialog<void>(
     context: context,
@@ -18,9 +27,7 @@ Future<void> showCongratsDialog(
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Congratulations $color!!!'),
-        content: const Text(
-          'Unfortunately, we will not let you play for second and other positions. But, we are glad to let you know that the feature is coming soon. Thanks. ',
-        ),
+        content:  Text(dialogContent),
         actions: <Widget>[
           ElevatedButton(
             style: ElevatedButton.styleFrom(
