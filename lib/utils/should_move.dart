@@ -20,7 +20,7 @@ bool shouldMove(WidgetRef ref) {
 
   List<Piece> piecesOfRoller = getPiecesOfRoller(pieces, roller);
 
-  if (gotOneButNoPiecesAreFreed(piecesOfRoller, boardInitialState, roll)) {
+  if (gotOneButPiecesLeftInPrison(piecesOfRoller, boardInitialState, roll)) {
     return true;
   }
 
@@ -38,7 +38,7 @@ bool shouldMove(WidgetRef ref) {
 bool shouldUpdatePositionForPiecesAboutToEnterHome(
     List<Piece> pieces, int roll) {
   List<String> aboutToEnterHomePositionsOnly = pieces
-      .where((p) => p.position.contains('-') && p.position.isNotEmpty)
+      .where((p) => p.position.contains('-'))
       .map((p) => p.position)
       .toList();
 
@@ -70,11 +70,11 @@ List<Piece> getPiecesOfRoller(List<Piece> pieces, String roller) {
   return pieces.where((p) => p.id.contains(roller)).toList();
 }
 
-bool gotOneButNoPiecesAreFreed(
+bool gotOneButPiecesLeftInPrison(
   List<Piece> pieces,
   BoardInitialState boardInitialState,
   int roll,
 ) {
   List<Piece> unFreedPieces = pieces.where((p) => !p.freedFromPrison).toList();
-  return roll == 1 && unFreedPieces.length == boardInitialState.numberOfPieces;
+  return roll == 1 && unFreedPieces.isNotEmpty;
 }
