@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/providers/dice_state_provider.dart';
+import 'package:ludo/providers/pieces_provider.dart';
 
 Future<void> showCongratsDialog(BuildContext context, String to) {
   return showDialog<void>(
@@ -22,14 +25,15 @@ Future<void> showCongratsDialog(BuildContext context, String to) {
   );
 }
 
-Future<void> showPopScreenConfirmationDialog(BuildContext context) {
+Future<void> showPopScreenConfirmationDialog(
+    BuildContext context, WidgetRef ref) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Are you sure?'),
         content: const Text(
-          'Are you sure you want to leave this page?',
+          'Are you sure you want to leave this page? If you leave, you will not be continue this game again.',
         ),
         actions: <Widget>[
           TextButton(
@@ -47,6 +51,8 @@ Future<void> showPopScreenConfirmationDialog(BuildContext context) {
             ),
             child: const Text('Leave'),
             onPressed: () {
+              ref.read(diceStateProvider.notifier).resetState();
+              ref.read(piecesProvider.notifier).resetState();
               Navigator.pop(context);
               Navigator.pop(context);
             },

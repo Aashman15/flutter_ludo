@@ -21,9 +21,8 @@ class BoardScreen extends ConsumerWidget {
         if(didPop){
           return;
         }
-        showPopScreenConfirmationDialog(context);
-        ref.read(diceStateProvider.notifier).resetState();
-        ref.read(piecesProvider.notifier).resetState();
+        showPopScreenConfirmationDialog(context, ref);
+
       },
       child: Scaffold(
         body: Center(
