@@ -2,7 +2,7 @@ other todos
 ================
 1) improve code and make it readable
 2) improve design, use global theming
-4) add animation in dice or pieces to determine what to do next i.e move or roll
+4) add animation in dice or pieces to easily notice what to do next i.e move or roll
 5) should include back button in board screen and confirmation exit
 6) save the progress in local storage for continue previous game feature
 7) dialog to continue previous game at the start of application
