@@ -104,16 +104,32 @@ class DiceRoller extends ConsumerWidget {
         pieces.where((p) => p.position.contains('-')).toList();
 
     if (piecesAboutToEnterHome.isNotEmpty) {
-      piecesAboutToEnterHome.sort((a, b) =>
-          getNumberFromNearestHomePosition(a.position)
-              .compareTo(getNumberFromNearestHomePosition(b.position)));
+      piecesAboutToEnterHome.sort(
+        (a, b) => getNumberFromNearestHomePosition(a.position).compareTo(
+          getNumberFromNearestHomePosition(b.position),
+        ),
+      );
 
       return piecesAboutToEnterHome.last;
     } else {
-      piecesNotAboutToEnterHome.sort(
-          (a, b) => int.parse(a.position).compareTo(int.parse(b.position)));
+      List<Piece> piecesInsideHomeArea =
+          piecesNotAboutToEnterHome.where((p) => p.insideHomeArea).toList();
 
-      return piecesNotAboutToEnterHome.last;
+      if (piecesInsideHomeArea.isEmpty) {
+        piecesNotAboutToEnterHome.sort(
+          (a, b) => int.parse(a.position).compareTo(
+            int.parse(b.position),
+          ),
+        );
+
+        return piecesNotAboutToEnterHome.last;
+      } else {
+        if (piecesInsideHomeArea.length > 1) {
+          piecesInsideHomeArea.sort(
+              (a, b) => int.parse(a.position).compareTo(int.parse(b.position)));
+        }
+        return piecesInsideHomeArea.last;
+      }
     }
   }
 
