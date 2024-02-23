@@ -1,6 +1,7 @@
 other todos
 ================
 1) improve code and make it readable
+  -- next cleaning should be on diceRoller rollDice function and the others
 2) improve design, use global theming
 4) add animation in dice or pieces to easily notice what to do next i.e move or roll
 5) should back button in board screen and confirmation exit
