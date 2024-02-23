@@ -2,15 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ludo/models/board_initial_state.dart';
-import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
-import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
-import 'package:ludo/providers/roll-one-repeated_count_provider.dart';
-import 'package:ludo/utils/should_move.dart';
+import 'package:ludo/utils/clicked_piece_util.dart';
+import 'package:ludo/utils/dice_state_util.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
 final randomizer = Random();
@@ -18,61 +15,59 @@ final randomizer = Random();
 class DiceRoller extends ConsumerWidget {
   const DiceRoller({super.key});
 
-  void rollDice(
-      WidgetRef ref, DiceState diceState, BoardInitialState initialState) {
-    if (!diceState.shouldRoll) {
+  void rollDice(WidgetRef ref) {
+    final diceState = ref.watch(diceStateProvider);
+    final newDiceState = getCopyOfDiceState(diceState);
+
+    if (!newDiceState.shouldRoll) {
       playSound(MySounds.error);
       return;
     }
 
-    ref.read(clickedPieceProvider.notifier).setClickedPiece('');
+    resetClickedPiece(ref);
 
     int currentRoll = randomizer.nextInt(6) + 1;
 
-    diceState.roll = currentRoll;
-    diceState.rolledBy = diceState.nextRoller;
+    newDiceState.roll = currentRoll;
 
-    if (diceState.rolledBy.isEmpty) {
-      diceState.rolledBy = initialState.selectedColors.first;
+    if (isFirstRoll(ref)) {
+      newDiceState.rolledBy = getFirstRoller(ref);
+    } else {
+      newDiceState.rolledBy = newDiceState.nextRoller;
     }
 
     bool killedRollingOneThrice = false;
 
-    if (currentRoll != 6 && currentRoll != 1) {
-      diceState.nextRoller = getNextRoller(diceState.rolledBy, ref);
-      ref.read(rollOneRepeatedCountProvider.notifier).resetState();
-    } else {
-      diceState.nextRoller = diceState.rolledBy;
+    if (shouldGiveAnotherTurn(newDiceState.roll)) {
+      newDiceState.nextRoller = newDiceState.rolledBy;
+
       if (currentRoll == 1) {
-        increaseRollOneRepeatedCount(ref, diceState.rolledBy);
+        increaseRollOneRepeatedCount(ref, newDiceState.rolledBy);
 
         if (getRollOneRepeatedCount(ref) == 3) {
-          bool killed = killPieceOfColorNearestHome(diceState.rolledBy, ref);
+          bool killed = killPieceOfColorNearestHome(newDiceState.rolledBy, ref);
 
           killedRollingOneThrice = killed;
 
-          ref.read(rollOneRepeatedCountProvider.notifier).resetState();
-          ref.watch(diceStateProvider.notifier).setShouldRoll(true);
+          resetRollOneRepeatedCount(ref);
         }
       } else {
-        ref.read(rollOneRepeatedCountProvider.notifier).resetState();
+        resetRollOneRepeatedCount(ref);
       }
-    }
-
-    if (!killedRollingOneThrice) {
-      updateShouldRoll(ref);
-      playSound(MySounds.roll);
     } else {
-      playSound(MySounds.rolledOneThrice);
+      newDiceState.nextRoller = getNextRoller(newDiceState.rolledBy, ref);
+      resetRollOneRepeatedCount(ref);
     }
-  }
 
-  int getRollOneRepeatedCount(WidgetRef ref) {
-    return ref.watch(rollOneRepeatedCountProvider).count;
-  }
+    if (killedRollingOneThrice) {
+      newDiceState.shouldRoll = true;
+      playSound(MySounds.rolledOneThrice);
+    } else {
+      newDiceState.shouldRoll = shouldRoll(ref);
+      playSound(MySounds.roll);
+    }
 
-  void increaseRollOneRepeatedCount(WidgetRef ref, String rolledBy) {
-    ref.read(rollOneRepeatedCountProvider.notifier).increaseRepeated(rolledBy);
+    setNewDiceState(ref, newDiceState);
   }
 
   bool killPieceOfColorNearestHome(String color, WidgetRef ref) {
@@ -137,16 +132,6 @@ class DiceRoller extends ConsumerWidget {
     return int.parse(position.split('-')[1]);
   }
 
-  void updateShouldRoll(WidgetRef ref) {
-    final notifier = ref.read(diceStateProvider.notifier);
-
-    if (shouldMove(ref)) {
-      notifier.setShouldRoll(false);
-    } else {
-      notifier.setShouldRoll(true);
-    }
-  }
-
   String getNextRoller(String roller, WidgetRef ref) {
     final boardInitialState = ref.watch(boardInitialStateProvider);
 
@@ -185,7 +170,7 @@ class DiceRoller extends ConsumerWidget {
       children: [
         InkWell(
           onTap: () {
-            rollDice(ref, diceState, boardInitialState);
+            rollDice(ref);
           },
           child: Image.asset(
             'assets/images/dice-$currentColor-$currentRoll.png',

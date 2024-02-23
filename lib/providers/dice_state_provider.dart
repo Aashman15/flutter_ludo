@@ -21,6 +21,10 @@ class DiceStateProvider extends StateNotifier<DiceState> {
     );
   }
 
+  void setState(DiceState diceState){
+    state = diceState;
+  }
+
   void setShouldRoll(bool shouldRoll) {
     state = DiceState(
       rolledBy: state.rolledBy,

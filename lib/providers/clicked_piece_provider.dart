@@ -6,6 +6,10 @@ class ClickedPieceProvider extends StateNotifier<String> {
   void setClickedPiece(String pieceId) {
     state = pieceId;
   }
+
+  void resetState(){
+    state = '';
+  }
 }
 
 final clickedPieceProvider =

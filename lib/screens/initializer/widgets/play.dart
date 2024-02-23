@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ludo/models/board_initial_state.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
-import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/screens/board/board_screen.dart';
+import 'package:ludo/utils/piece_util.dart';
 
 class Play extends ConsumerWidget {
   const Play({super.key});
@@ -24,31 +23,19 @@ class Play extends ConsumerWidget {
   }
 
   void play(BuildContext context, WidgetRef ref) {
-    final boardInitialState = ref.watch(boardInitialStateProvider);
-    if (boardInitialState.selectedColors.length < 2) {
+    if (isBoardInitialStateNotValid(ref)) {
       return;
     }
 
-    updatePieces(ref, boardInitialState);
+    updatePiecesAccordingToBoardInitialState(ref);
 
     navigateToBoardScreen(context);
   }
 
-  void updatePieces(WidgetRef ref, BoardInitialState boardInitialState) {
-    final pieces = ref.watch(piecesProvider);
+  bool isBoardInitialStateNotValid(WidgetRef ref) {
+    final boardInitialState = ref.watch(boardInitialStateProvider);
 
-    final updatedPieces = pieces
-        .where(
-          (piece) =>
-              boardInitialState.selectedColors.contains(
-                piece.id.split('-')[0],
-              ) &&
-              int.parse(piece.id.split('-')[1]) <=
-                  boardInitialState.numberOfPieces,
-        )
-        .toList();
-
-    ref.read(piecesProvider.notifier).setPieces(updatedPieces);
+    return boardInitialState.selectedColors.length < 2;
   }
 
   void navigateToBoardScreen(BuildContext context) {

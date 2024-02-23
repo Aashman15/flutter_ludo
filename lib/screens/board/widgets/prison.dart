@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
-import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
+import 'package:ludo/utils/clicked_piece_util.dart';
+import 'package:ludo/utils/dice_state_util.dart';
 import 'package:ludo/utils/piece_util.dart';
 import 'package:ludo/utils/position_util.dart';
 import 'package:ludo/utils/sorts.dart';
@@ -16,18 +16,18 @@ class Prison extends ConsumerWidget {
 
   final String color;
 
-  bool shouldFree(DiceState diceState) {
+  bool shouldFree(WidgetRef ref) {
+    final diceState = ref.watch(diceStateProvider);
+
     return !diceState.shouldRoll &&
         diceState.rolledBy == color &&
         diceState.roll == 1;
   }
 
   void freePiece(String pieceId, WidgetRef ref) {
-    final diceState = ref.watch(diceStateProvider);
+    updateClickedPiece(ref, pieceId);
 
-    ref.read(clickedPieceProvider.notifier).setClickedPiece(pieceId);
-
-    if (!shouldFree(diceState)) {
+    if (!shouldFree(ref)) {
       playSound(MySounds.error);
       return;
     }
@@ -36,7 +36,7 @@ class Prison extends ConsumerWidget {
     piece.freedFromPrison = true;
     piece.position = getFirstPosition(color);
 
-    ref.read(diceStateProvider.notifier).setShouldRoll(true);
+    updateShouldRoll(ref, true);
 
     playSound(MySounds.move);
   }
