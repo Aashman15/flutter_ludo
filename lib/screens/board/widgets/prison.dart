@@ -16,10 +16,6 @@ class Prison extends ConsumerWidget {
 
   final String color;
 
-  List<Piece> getColorPieces(List<Piece> pieces) {
-    return pieces.where((piece) => piece.id.contains(color)).toList();
-  }
-
   bool shouldFree(DiceState diceState) {
     return !diceState.shouldRoll &&
         diceState.rolledBy == color &&
@@ -32,7 +28,7 @@ class Prison extends ConsumerWidget {
     ref.read(clickedPieceProvider.notifier).setClickedPiece(pieceId);
 
     if (!shouldFree(diceState)) {
-      playSound('error');
+      playSound(MySounds.error);
       return;
     }
 
@@ -42,7 +38,7 @@ class Prison extends ConsumerWidget {
 
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
 
-    playSound('move');
+    playSound(MySounds.move);
   }
 
   SizedBox getButtonSlot() {

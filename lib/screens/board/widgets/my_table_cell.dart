@@ -49,7 +49,7 @@ class MyTableCell extends ConsumerWidget {
     final pieces = ref.watch(piecesProvider);
 
     if (!shouldUpdatePiecePosition(pieceId, diceState, pieces)) {
-      playSound('error');
+      playSound(MySounds.error);
       return;
     }
 
@@ -62,13 +62,13 @@ class MyTableCell extends ConsumerWidget {
     bool congratulated = congratsIfNeeded(ref, context);
 
     if (congratulated) {
-      playSound('congratulations');
+      playSound(MySounds.congratulations);
     } else if (result.contains('movedAndKilled')) {
-      playSound('kill');
+      playSound(MySounds.kill);
     } else if (result.contains('justMoved')) {
-      playSound('move');
+      playSound(MySounds.move);
     }else if(result.contains('enteredHome')){
-      playSound('enterHome');
+      playSound(MySounds.enterHome);
     }
   }
 

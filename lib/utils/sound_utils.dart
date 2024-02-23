@@ -1,71 +1,33 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 
+final AssetsAudioPlayer _player = AssetsAudioPlayer.newPlayer();
 
-final AssetsAudioPlayer player = AssetsAudioPlayer.newPlayer();
+const _soundPaths = {
+  MySounds.roll: 'assets/sounds/dice-roll.mp3',
+  MySounds.move: 'assets/sounds/piece-move.mp3',
+  MySounds.kill: 'assets/sounds/slice.mp3',
+  MySounds.error: 'assets/sounds/error-sound.mp3',
+  MySounds.enterHome: 'assets/sounds/enter-home.mp3',
+  MySounds.congratulations: 'assets/sounds/congratulations.mp3',
+  MySounds.rolledOneThrice: 'assets/sounds/rolled-one-thrice.mp3',
+};
 
-void playSound(String sound) {
-  if (sound == 'error') {
-    player.open(
-      Audio("assets/sounds/error-sound.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-  if (sound == 'roll') {
-    player.open(
-      Audio("assets/sounds/dice-roll.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
+void playSound(MySounds sound) {
+  final path = _soundPaths[sound]!;
 
-  if (sound == 'move') {
-    player.open(
-      Audio("assets/sounds/piece-move.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-
-  if (sound == 'kill') {
-    player.open(
-      Audio("assets/sounds/slice.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-
-  if (sound == 'enterHome') {
-    player.open(
-      Audio("assets/sounds/enter-home.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-
-  if (sound == 'congratulations') {
-    player.open(
-      Audio("assets/sounds/congratulations.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-
-  if(sound == 'rolledOneThrice'){
-    player.open(
-      Audio("assets/sounds/rolled-one-thrice.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-    return;
-  }
-
+  _player.open(
+    Audio(path),
+    autoStart: true,
+    showNotification: true,
+  );
 }
 
-
+enum MySounds {
+  roll,
+  move,
+  kill,
+  error,
+  enterHome,
+  congratulations,
+  rolledOneThrice
+}

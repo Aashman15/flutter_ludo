@@ -21,7 +21,7 @@ class DiceRoller extends ConsumerWidget {
   void rollDice(
       WidgetRef ref, DiceState diceState, BoardInitialState initialState) {
     if (!diceState.shouldRoll) {
-      playSound('error');
+      playSound(MySounds.error);
       return;
     }
 
@@ -61,9 +61,9 @@ class DiceRoller extends ConsumerWidget {
 
     if (!killedRollingOneThrice) {
       updateShouldRoll(ref);
-      playSound('roll');
+      playSound(MySounds.roll);
     } else {
-      playSound('rolledOneThrice');
+      playSound(MySounds.rolledOneThrice);
     }
   }
 
