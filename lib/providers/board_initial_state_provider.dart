@@ -1,16 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/data/board_initial_state.dart';
 import 'package:ludo/models/board_initial_state.dart';
+import 'package:ludo/utils/color_util.dart';
 
-Map<String, int> colorOrder = {
-  'blue': 0,
-  'yellow': 1,
-  'green': 2,
-  'red': 3,
-};
 
 void sortColors(List<String> colors) {
-  colors.sort((a, b) => colorOrder[a]!.compareTo(colorOrder[b]!));
+  colors.sort((a, b) => colorsOrder[a]!.compareTo(colorsOrder[b]!));
 }
 
 class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {

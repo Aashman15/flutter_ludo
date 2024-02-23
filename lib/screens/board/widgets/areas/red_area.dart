@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ludo/screens/board/widgets/my_table_cell.dart';
+import 'package:ludo/utils/color_util.dart';
 
 class RedArea extends StatelessWidget {
   const RedArea({super.key});
@@ -98,17 +99,29 @@ class RedArea extends StatelessWidget {
         TableRow(
           children: [
             MyTableCell(
-                colIndex: 0, colPosition: firstColPosition, color: 'red'),
+                colIndex: 0,
+                colPosition: firstColPosition,
+                color: MyColors.red),
             MyTableCell(
-                colIndex: 1, colPosition: secondColPosition, color: 'red'),
+                colIndex: 1,
+                colPosition: secondColPosition,
+                color: MyColors.red),
             MyTableCell(
-                colIndex: 2, colPosition: thirdColPosition, color: 'red'),
+                colIndex: 2,
+                colPosition: thirdColPosition,
+                color: MyColors.red),
             MyTableCell(
-                colIndex: 3, colPosition: fourthColPosition, color: 'red'),
+                colIndex: 3,
+                colPosition: fourthColPosition,
+                color: MyColors.red),
             MyTableCell(
-                colIndex: 4, colPosition: fifthColPosition, color: 'red'),
+                colIndex: 4,
+                colPosition: fifthColPosition,
+                color: MyColors.red),
             MyTableCell(
-                colIndex: 5, colPosition: sixthColPosition, color: 'red'),
+                colIndex: 5,
+                colPosition: sixthColPosition,
+                color: MyColors.red),
           ],
         ),
       );

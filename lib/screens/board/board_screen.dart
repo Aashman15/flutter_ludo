@@ -17,11 +17,10 @@ class BoardScreen extends ConsumerWidget {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
-        if(didPop){
+        if (didPop) {
           return;
         }
         showPopScreenConfirmationDialog(context, ref);
-
       },
       child: Scaffold(
         body: Center(
@@ -31,15 +30,15 @@ class BoardScreen extends ConsumerWidget {
               Text(
                 message,
                 style: const TextStyle(
-                    color: Colors.purple, fontWeight: FontWeight.bold),
+                  color: Colors.purple,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Container(
                 color: const Color.fromARGB(255, 234, 228, 236),
-                padding: const EdgeInsets.only(bottom: 45),
                 child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 50),
                     FirstRow(),
                     SizedBox(height: 10),
                     SecondRow(),

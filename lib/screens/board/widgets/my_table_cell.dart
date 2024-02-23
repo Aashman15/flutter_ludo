@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/providers/safe_zones_provider.dart';
+import 'package:ludo/utils/color_util.dart';
 import 'package:ludo/utils/dialogs.dart';
 import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
@@ -8,6 +9,7 @@ import 'package:ludo/providers/board_initial_state_provider.dart';
 import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
+import 'package:ludo/utils/position_util.dart';
 import 'package:ludo/utils/sound_utils.dart';
 import 'package:ludo/utils/table_cell_child_util.dart';
 import 'package:ludo/utils/update_piece_position.dart';
@@ -112,11 +114,11 @@ class MyTableCell extends ConsumerWidget {
   }
 
   double? getHeightForTableCell(color) {
-    if (color == 'blue' || color == 'green') {
+    if (color == MyColors.blue || color == MyColors.green) {
       return 30;
     }
 
-    if (color == 'red' || color == 'yellow') {
+    if (color == MyColors.red || color == MyColors.yellow) {
       return 35;
     }
 
@@ -124,16 +126,8 @@ class MyTableCell extends ConsumerWidget {
   }
 
   Color? getColorForAboutToEnterHomeArea(String colPosition, String color) {
-    if (colPosition.contains('-')) {
-      if (color == 'blue') {
-        return const Color.fromARGB(80, 33, 150, 243);
-      } else if (color == 'yellow') {
-        return const Color.fromARGB(80, 255, 235, 59);
-      } else if (color == 'green') {
-        return const Color.fromARGB(80, 76, 175, 80);
-      } else if (color == 'red') {
-        return const Color.fromARGB(80, 244, 67, 54);
-      }
+    if (isAboutToEnterHomePosition(colPosition)) {
+      return getAboutToEnterHomePositionColor(color);
     }
     return null;
   }

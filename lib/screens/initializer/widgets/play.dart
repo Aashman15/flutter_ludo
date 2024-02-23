@@ -31,7 +31,7 @@ class Play extends ConsumerWidget {
 
     updatePieces(ref, boardInitialState);
 
-    navigateToLudoBoard(context);
+    navigateToBoardScreen(context);
   }
 
   void updatePieces(WidgetRef ref, BoardInitialState boardInitialState) {
@@ -51,7 +51,7 @@ class Play extends ConsumerWidget {
     ref.read(piecesProvider.notifier).setPieces(updatedPieces);
   }
 
-  void navigateToLudoBoard(BuildContext context) {
+  void navigateToBoardScreen(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (ctx) => const BoardScreen(),

@@ -22,25 +22,19 @@ class SelectNoOfPieces extends ConsumerWidget {
               onTap: read.selectNumberOfPieces,
               buttonText: '1',
             ),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             NumberOfPlayersButton(
               isActive: state.numberOfPieces == 2,
               onTap: read.selectNumberOfPieces,
               buttonText: '2',
             ),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             NumberOfPlayersButton(
               isActive: state.numberOfPieces == 3,
               onTap: read.selectNumberOfPieces,
               buttonText: '3',
             ),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             NumberOfPlayersButton(
               isActive: state.numberOfPieces == 4,
               onTap: read.selectNumberOfPieces,

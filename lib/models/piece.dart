@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:ludo/screens/board/widgets/piece_button.dart';
 
+@immutable
 class Piece {
   Piece({
     required this.id,

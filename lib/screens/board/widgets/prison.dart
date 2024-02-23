@@ -6,6 +6,9 @@ import 'package:ludo/screens/board/widgets/piece_button.dart';
 import 'package:ludo/providers/clicked_piece_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
+import 'package:ludo/utils/piece_util.dart';
+import 'package:ludo/utils/position_util.dart';
+import 'package:ludo/utils/sorts.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
 class Prison extends ConsumerWidget {
@@ -33,22 +36,12 @@ class Prison extends ConsumerWidget {
       return;
     }
 
-    final pieces = ref.watch(piecesProvider);
-
-    Piece piece = pieces.where((piece) => piece.id == pieceId).toList()[0];
+    Piece piece = getPiece(pieceId, ref);
     piece.freedFromPrison = true;
-
-    if (color == 'blue') {
-      piece.position = '9';
-    } else if (color == 'yellow') {
-      piece.position = '22';
-    } else if (color == 'green') {
-      piece.position = '35';
-    } else if (color == 'red') {
-      piece.position = '48';
-    }
+    piece.position = getFirstPosition(color);
 
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
+
     playSound('move');
   }
 
@@ -104,14 +97,10 @@ class Prison extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Piece> pieces = ref.watch(piecesProvider);
-    List<Piece> piecesOfColor = getColorPieces(pieces);
+    List<Piece> allPieces = ref.watch(piecesProvider);
+    List<Piece> piecesOfColor = getPiecesOfColor(allPieces, color);
 
-    piecesOfColor.sort((piece1, piece2) {
-      int a = int.parse(piece1.id.split('-').last);
-      int b = int.parse(piece2.id.split('-').last);
-      return a.compareTo(b);
-    });
+    sortPiecesOfColor(piecesOfColor, color);
 
     setOnPressedForUnFreedPieces(piecesOfColor, ref);
 

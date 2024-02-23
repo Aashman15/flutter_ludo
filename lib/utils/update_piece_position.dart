@@ -3,13 +3,15 @@ import 'package:ludo/models/piece.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/providers/safe_zones_provider.dart';
-import 'package:ludo/utils/sound_utils.dart';
+import 'package:ludo/utils/color_util.dart';
 
 const Map<String, List<int>> insideHomeAreaCriteria = {
-  'blue': [1, 7],
-  'yellow': [14, 20],
-  'green': [27, 33],
-  'red': [40, 46],
+  // [0] = min
+  // [1] = max
+  MyColors.blue: [1, 7],
+  MyColors.yellow: [14, 20],
+  MyColors.green: [27, 33],
+  MyColors.red: [40, 46],
 };
 
 String updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
@@ -24,9 +26,10 @@ String updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
   String response = '';
 
   if (aboutToEnterHome(position)) {
-   response = handleAboutToEnterHomePosition(roll, position, piece, color, ref);
+    response =
+        handleAboutToEnterHomePosition(roll, position, piece, color, ref);
   } else {
-  response =  handleOtherPosition(roll, position, piece, color, ref);
+    response = handleOtherPosition(roll, position, piece, color, ref);
   }
 
   bool killed = killPieces(pieceId, ref);
@@ -34,7 +37,7 @@ String updatePiecePosition(String pieceId, int roll, WidgetRef ref) {
   if (killed) {
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
     ref.read(diceStateProvider.notifier).setNextRoller(color);
-    response =  'movedAndKilled';
+    response = 'movedAndKilled';
   }
   return response;
 }
@@ -150,8 +153,8 @@ String handleOtherPosition(
     }
 
     ref.read(piecesProvider.notifier).replaceProvidedPiecesOnly([piece]);
-    if(piece.position.contains('-')){
-      if(int.parse(piece.position.split('-')[1]) >= 6){
+    if (piece.position.contains('-')) {
+      if (int.parse(piece.position.split('-')[1]) >= 6) {
         piece.insideHome = true;
         return 'enteredHome';
       }

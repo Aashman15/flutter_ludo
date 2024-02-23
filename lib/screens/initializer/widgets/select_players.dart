@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ludo/screens/initializer/widgets/number_of_players_button.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
+import 'package:ludo/utils/color_util.dart';
 
 class SelectPlayers extends ConsumerWidget {
   const SelectPlayers({super.key});
@@ -14,32 +15,32 @@ class SelectPlayers extends ConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Select or unselect players: *at least 2'),
+        const Text('Select or unselect players.'),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             NumberOfPlayersButton(
-              isActive: initializerState.selectedColors.contains('blue'),
+              isActive: initializerState.selectedColors.contains(MyColors.blue),
               onTap: read.selectOrDisSelectColor,
-              buttonText: 'blue',
+              buttonText: MyColors.blue,
             ),
             const SizedBox(width: 5),
             NumberOfPlayersButton(
-              isActive: initializerState.selectedColors.contains('yellow'),
+              isActive: initializerState.selectedColors.contains(MyColors.yellow),
               onTap: read.selectOrDisSelectColor,
-              buttonText: 'yellow',
+              buttonText: MyColors.blue,
             ),
             const SizedBox(width: 5),
             NumberOfPlayersButton(
-              isActive: initializerState.selectedColors.contains('green'),
+              isActive: initializerState.selectedColors.contains(MyColors.green),
               onTap: read.selectOrDisSelectColor,
-              buttonText: 'green',
+              buttonText: MyColors.blue,
             ),
             const SizedBox(width: 5),
             NumberOfPlayersButton(
-              isActive: initializerState.selectedColors.contains('red'),
+              isActive: initializerState.selectedColors.contains(MyColors.red),
               onTap: read.selectOrDisSelectColor,
-              buttonText: 'red',
+              buttonText: MyColors.blue,
             ),
           ],
         )
