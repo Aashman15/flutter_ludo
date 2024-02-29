@@ -73,11 +73,14 @@ class DiceRoller extends ConsumerWidget {
   bool killPieceOfColorNearestHome(String color, WidgetRef ref) {
     final pieces = ref.watch(piecesProvider);
 
-    List<Piece> freedPiecesOfColor =
-        pieces.where((p) => p.id.contains(color) && p.freedFromPrison).toList();
+    List<Piece> filteredPieces = pieces
+        .where(
+          (p) => p.id.contains(color) && p.freedFromPrison && !p.insideHome,
+        )
+        .toList();
 
-    if (freedPiecesOfColor.isNotEmpty) {
-      Piece piece = getTheNearestHomePiece(freedPiecesOfColor);
+    if (filteredPieces.isNotEmpty) {
+      Piece piece = getTheNearestHomePiece(filteredPieces);
 
       piece.freedFromPrison = false;
       piece.insideHome = false;
