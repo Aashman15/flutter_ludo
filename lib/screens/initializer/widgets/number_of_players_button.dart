@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ludo/utils/dialogs.dart';
 
 class NumberOfPlayersButton extends StatelessWidget {
   const NumberOfPlayersButton(
@@ -26,7 +27,7 @@ class NumberOfPlayersButton extends StatelessWidget {
         backgroundColor: isActive ? Colors.black : null,
         foregroundColor: isActive ? Colors.white : null,
       ),
-      child: Text(buttonText),
+      child: Text(capitalizeFirstLetter(buttonText)),
     );
   }
 }

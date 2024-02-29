@@ -28,19 +28,19 @@ class SelectPlayers extends ConsumerWidget {
             NumberOfPlayersButton(
               isActive: initializerState.selectedColors.contains(MyColors.yellow),
               onTap: read.selectOrDisSelectColor,
-              buttonText: MyColors.blue,
+              buttonText: MyColors.yellow,
             ),
             const SizedBox(width: 5),
             NumberOfPlayersButton(
               isActive: initializerState.selectedColors.contains(MyColors.green),
               onTap: read.selectOrDisSelectColor,
-              buttonText: MyColors.blue,
+              buttonText: MyColors.green,
             ),
             const SizedBox(width: 5),
             NumberOfPlayersButton(
               isActive: initializerState.selectedColors.contains(MyColors.red),
               onTap: read.selectOrDisSelectColor,
-              buttonText: MyColors.blue,
+              buttonText: MyColors.red,
             ),
           ],
         )
