@@ -55,20 +55,38 @@ class MyTableCell extends ConsumerWidget {
 
     ref.read(clickedPieceProvider.notifier).setClickedPiece(pieceId);
 
-    String result = updatePiecePosition(pieceId, diceState.roll, ref);
+    String whatHappened = updatePiecePosition(pieceId, diceState.roll, ref);
 
     ref.read(diceStateProvider.notifier).setShouldRoll(true);
 
     bool congratulated = congratsIfNeeded(ref, context);
 
     if (congratulated) {
+      whatHappened = 'congratulated';
+    }
+
+    playSoundBasedOnWhatHappened(whatHappened);
+  }
+
+  void playSoundBasedOnWhatHappened(String whatHappened) {
+    if (whatHappened == 'congratulated') {
       playSound(MySounds.congratulations);
-    } else if (result.contains('movedAndKilled')) {
+      return;
+    }
+
+    if (whatHappened == 'movedAndKilled') {
       playSound(MySounds.kill);
-    } else if (result.contains('justMoved')) {
+      return;
+    }
+
+    if (whatHappened == 'justMoved') {
       playSound(MySounds.move);
-    }else if(result.contains('enteredHome')){
+      return;
+    }
+
+    if (whatHappened == 'enteredHome') {
       playSound(MySounds.enterHome);
+      return;
     }
   }
 
