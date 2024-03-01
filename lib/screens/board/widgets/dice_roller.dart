@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ludo/models/dice.state.dart';
 import 'package:ludo/models/piece.dart';
 import 'package:ludo/providers/board_initial_state_provider.dart';
 import 'package:ludo/providers/dice_state_provider.dart';
@@ -26,7 +27,7 @@ class DiceRoller extends ConsumerWidget {
 
     resetClickedPiece(ref);
 
-    int currentRoll = randomizer.nextInt(6) + 1;
+    int currentRoll = getRandomNumberBetweenOneAndSix();
 
     newDiceState.roll = currentRoll;
 
@@ -44,13 +45,7 @@ class DiceRoller extends ConsumerWidget {
       if (currentRoll == 1) {
         increaseRollOneRepeatedCount(ref, newDiceState.rolledBy);
 
-        if (getRollOneRepeatedCount(ref) == 3) {
-          bool killed = killPieceOfColorNearestHome(newDiceState.rolledBy, ref);
-
-          killedRollingOneThrice = killed;
-
-          resetRollOneRepeatedCount(ref);
-        }
+        killedRollingOneThrice = killIfOneRolledThrice(ref, newDiceState);
       } else {
         resetRollOneRepeatedCount(ref);
       }
@@ -61,13 +56,27 @@ class DiceRoller extends ConsumerWidget {
 
     setNewDiceState(ref, newDiceState);
 
-    if (killedRollingOneThrice) {
-      updateShouldRoll(ref, true);
-      playSound(MySounds.rolledOneThrice);
-    } else {
+    if (!killedRollingOneThrice) {
       updateShouldRoll(ref, shouldRoll(ref));
       playSound(MySounds.roll);
     }
+  }
+
+  bool killIfOneRolledThrice(WidgetRef ref, DiceState diceState) {
+    if (getRollOneRepeatedCount(ref) == 3) {
+      killPieceOfColorNearestHome(diceState.rolledBy, ref);
+
+      resetRollOneRepeatedCount(ref);
+
+      diceState.shouldRoll = true;
+      playSound(MySounds.rolledOneThrice);
+      return true;
+    }
+    return false;
+  }
+
+  int getRandomNumberBetweenOneAndSix() {
+    return randomizer.nextInt(6) + 1;
   }
 
   bool killPieceOfColorNearestHome(String color, WidgetRef ref) {
