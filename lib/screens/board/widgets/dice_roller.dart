@@ -59,15 +59,15 @@ class DiceRoller extends ConsumerWidget {
       resetRollOneRepeatedCount(ref);
     }
 
+    setNewDiceState(ref, newDiceState);
+
     if (killedRollingOneThrice) {
-      newDiceState.shouldRoll = true;
+      updateShouldRoll(ref, true);
       playSound(MySounds.rolledOneThrice);
     } else {
-      newDiceState.shouldRoll = shouldRoll(ref);
+      updateShouldRoll(ref, shouldRoll(ref));
       playSound(MySounds.roll);
     }
-
-    setNewDiceState(ref, newDiceState);
   }
 
   bool killPieceOfColorNearestHome(String color, WidgetRef ref) {
