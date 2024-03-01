@@ -11,7 +11,12 @@ class BoardInitialStateProvider extends StateNotifier<BoardInitialState> {
       : super(
           BoardInitialState(
             4,
-            myColors,
+            [
+              MyColors.blue,
+              MyColors.yellow,
+              MyColors.green,
+              MyColors.red,
+            ],
           ),
         );
 

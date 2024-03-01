@@ -8,10 +8,6 @@ const colorFirstPositions = {
 };
 
 String getFirstPosition(String color) {
-  if (!myColors.contains(color)) {
-    return '';
-  }
-
   return colorFirstPositions[color]!;
 }
 

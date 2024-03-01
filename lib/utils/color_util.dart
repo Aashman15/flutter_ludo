@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-const myColors = [
-  MyColors.blue,
-  MyColors.yellow,
-  MyColors.green,
-  MyColors.red,
-];
 
 const colorsOrder = {
   MyColors.blue: 0,
