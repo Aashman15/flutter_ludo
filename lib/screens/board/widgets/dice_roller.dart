@@ -13,8 +13,43 @@ import 'package:ludo/utils/sound_utils.dart';
 
 final randomizer = Random();
 
-class DiceRoller extends ConsumerWidget {
+class DiceRoller extends ConsumerStatefulWidget {
   const DiceRoller({super.key});
+
+  @override
+  ConsumerState<DiceRoller> createState() {
+    return _DiceRollerState();
+  }
+}
+
+class _DiceRollerState extends ConsumerState<DiceRoller>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<int> _diceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = getAnimationController();
+    _diceAnimation = getAnimation();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  AnimationController getAnimationController() {
+    return AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
+  Animation<int> getAnimation() {
+    return IntTween(begin: 0, end: 1).animate(_animationController);
+  }
 
   void rollDice(WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
@@ -160,7 +195,7 @@ class DiceRoller extends ConsumerWidget {
   }
 
   @override
-  Widget build(context, WidgetRef ref) {
+  Widget build(context) {
     final diceState = ref.watch(diceStateProvider);
     final boardInitialState = ref.watch(boardInitialStateProvider);
 
@@ -177,14 +212,32 @@ class DiceRoller extends ConsumerWidget {
       currentRoll = 1;
     }
 
-    return InkWell(
-      onTap: () {
-        rollDice(ref);
-      },
-      child: Image.asset(
-        'assets/images/dice-$currentColor-$currentRoll.png',
-        width: 50,
-        height: 50,
+
+    if(diceState.shouldRoll){
+      _animationController.repeat();
+    }else{
+      _animationController.reverse();
+    }
+
+    return SizedBox(
+      height: 50,
+      width: 50,
+      child: Center(
+        child: InkWell(
+          onTap: () {
+            rollDice(ref);
+          },
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return Image.asset(
+                'assets/images/dice-$currentColor-$currentRoll.png',
+                width: _diceAnimation.value == 0 ? 50 : 45,
+                height: _diceAnimation.value == 0 ? 50 : 45,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
