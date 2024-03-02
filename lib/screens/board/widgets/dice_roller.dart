@@ -177,20 +177,15 @@ class DiceRoller extends ConsumerWidget {
       currentRoll = 1;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-          onTap: () {
-            rollDice(ref);
-          },
-          child: Image.asset(
-            'assets/images/dice-$currentColor-$currentRoll.png',
-            width: 50,
-            height: 50,
-          ),
-        ),
-      ],
+    return InkWell(
+      onTap: () {
+        rollDice(ref);
+      },
+      child: Image.asset(
+        'assets/images/dice-$currentColor-$currentRoll.png',
+        width: 50,
+        height: 50,
+      ),
     );
   }
 }
