@@ -43,13 +43,15 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
 
     _rotationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 1500),
     );
 
     _rotationAnimation = Tween<double>(
       begin: 0,
       end: 2 * pi,
-    ).animate(_rotationController);
+    ).animate(
+      CurvedAnimation(parent: _rotationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -60,6 +62,14 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
   }
 
   Future<bool> rotateImage() {
+    final diceState = ref.watch(diceStateProvider);
+
+    if (diceState.shouldRoll) {
+      playSound(MySounds.roll);
+    } else {
+      playSound(MySounds.error);
+    }
+
     _isRotating = true;
     _rotationController.reset();
     return _rotationController.forward().then((value) => _isRotating = false);
@@ -70,7 +80,6 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
     final newDiceState = getCopyOfDiceState(diceState);
 
     if (!newDiceState.shouldRoll) {
-      playSound(MySounds.error);
       return;
     }
 
@@ -107,7 +116,6 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
 
     if (!killedRollingOneThrice) {
       updateShouldRoll(ref, shouldRoll(ref));
-      playSound(MySounds.roll);
     }
   }
 
