@@ -43,7 +43,7 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
 
     _rotationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _rotationAnimation = Tween<double>(
@@ -248,10 +248,10 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
           onTap: () async {
             if (!_isRotating) {
               await rotateImage();
-              rollDice(ref);
+              if(diceState.shouldRoll){
+                rollDice(ref);
+              }
             }
-
-            // rollDice(ref);
           },
           child: AnimatedBuilder(
             animation: _animationController,
