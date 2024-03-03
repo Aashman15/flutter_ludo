@@ -11,8 +11,10 @@ import 'package:ludo/utils/clicked_piece_util.dart';
 import 'package:ludo/utils/dice_state_util.dart';
 import 'package:ludo/utils/move_piece_or_roll_dice_animation.util.dart';
 import 'package:ludo/utils/sound_utils.dart';
+import 'package:uuid/uuid.dart';
 
 final randomizer = Random();
+const uuid = Uuid();
 
 class DiceRoller extends ConsumerStatefulWidget {
   const DiceRoller({super.key});
@@ -24,25 +26,44 @@ class DiceRoller extends ConsumerStatefulWidget {
 }
 
 class _DiceRollerState extends ConsumerState<DiceRoller>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  bool _isRotating = false;
 
   late AnimationController _animationController;
   late Animation<int> _diceAnimation;
+
+  late AnimationController _rotationController;
+  late Animation<double> _rotationAnimation;
 
   @override
   void initState() {
     super.initState();
     _animationController = getAnimationController(this);
     _diceAnimation = getAnimation(_animationController);
+
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _rotationAnimation = Tween<double>(
+      begin: 0,
+      end: 2 * pi,
+    ).animate(_rotationController);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _rotationController.dispose();
     super.dispose();
   }
 
-
+  Future<bool> rotateImage() {
+    _isRotating = true;
+    _rotationController.reset();
+    return _rotationController.forward().then((value) => _isRotating = false);
+  }
 
   void rollDice(WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
@@ -205,10 +226,9 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
       currentRoll = 1;
     }
 
-
-    if(diceState.shouldRoll){
+    if (diceState.shouldRoll) {
       _animationController.repeat();
-    }else{
+    } else {
       _animationController.reverse();
     }
 
@@ -217,16 +237,24 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
       width: 50,
       child: Center(
         child: InkWell(
-          onTap: () {
-            rollDice(ref);
+          onTap: () async {
+            if (!_isRotating) {
+              await rotateImage();
+              rollDice(ref);
+            }
+
+            // rollDice(ref);
           },
           child: AnimatedBuilder(
             animation: _animationController,
             builder: (context, child) {
-              return Image.asset(
-                'assets/images/dice-$currentColor-$currentRoll.png',
-                width: _diceAnimation.value == 0 ? 50 : 45,
-                height: _diceAnimation.value == 0 ? 50 : 45,
+              return Transform.rotate(
+                angle: _rotationAnimation.value,
+                child: Image.asset(
+                  'assets/images/dice-$currentColor-$currentRoll.png',
+                  width: _diceAnimation.value == 0 ? 50 : 45,
+                  height: _diceAnimation.value == 0 ? 50 : 45,
+                ),
               );
             },
           ),
