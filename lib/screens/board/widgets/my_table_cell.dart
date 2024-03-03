@@ -51,10 +51,6 @@ class _MyTableCellState extends ConsumerState<MyTableCell>
     _animationController = getAnimationController(this);
     _pieceAnimation = getAnimation(_animationController);
 
-    _animationController.addListener(() {
-      print('my table cell _piece animation values');
-      print(_pieceAnimation.value);
-    });
   }
 
   @override
