@@ -6,21 +6,46 @@ import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/utils/clicked_piece_util.dart';
 import 'package:ludo/utils/dice_state_util.dart';
+import 'package:ludo/utils/move_piece_or_roll_dice_animation.util.dart';
 import 'package:ludo/utils/piece_util.dart';
 import 'package:ludo/utils/position_util.dart';
 import 'package:ludo/utils/sorts.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
-class Prison extends ConsumerWidget {
+class Prison extends ConsumerStatefulWidget {
   const Prison({super.key, required this.color});
 
   final String color;
+
+  @override
+  ConsumerState<Prison> createState() {
+    return _PrisonState();
+  }
+}
+
+class _PrisonState extends ConsumerState<Prison>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<int> _pieceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = getAnimationController(this);
+    _pieceAnimation = getAnimation(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   bool shouldFree(WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
 
     return !diceState.shouldRoll &&
-        diceState.rolledBy == color &&
+        diceState.rolledBy == widget.color &&
         diceState.roll == 1;
   }
 
@@ -34,21 +59,17 @@ class Prison extends ConsumerWidget {
 
     Piece piece = getPiece(pieceId, ref);
     piece.freedFromPrison = true;
-    piece.position = getFirstPosition(color);
+    piece.position = getFirstPosition(widget.color);
 
     updateShouldRoll(ref, true);
 
     playSound(MySounds.move);
   }
 
-  SizedBox getButtonSlot() {
-    return SizedBox(
-      height: 20,
-      width: 20,
-      child: PieceButton(
-        backgroundColor: Colors.white,
-        onPressed: () {},
-      ),
+  PieceButton getButtonSlot() {
+    return PieceButton(
+      backgroundColor: Colors.white,
+      onPressed: () {},
     );
   }
 
@@ -66,55 +87,94 @@ class Prison extends ConsumerWidget {
     }
   }
 
-  List<SizedBox> getSizedPieceButtons(List<Piece> pieces) {
-    List<SizedBox> sizedButtons = [];
+  List<PieceButton?> getButtonListOfLengthFour(List<Piece> pieces) {
+    List<PieceButton?> pieceButtons = [];
     for (int i = 0; i < 4; i++) {
       if (pieces.length > i) {
-        sizedButtons.add(
-          getSizedButton(
-            pieces[i].freedFromPrison ? getButtonSlot() : pieces[i].button,
-          ),
+        pieceButtons.add(
+          pieces[i].freedFromPrison ? null : pieces[i].button,
         );
       } else {
-        sizedButtons.add(getSizedButton(getButtonSlot()));
+        pieceButtons.add(null);
       }
     }
 
-    return sizedButtons;
+    return pieceButtons;
   }
 
-  SizedBox getSizedButton(Widget child) {
-    return SizedBox(
-      height: 30,
-      width: 30,
-      child: child,
+  bool shouldAnimate() {
+    final diceState = ref.watch(diceStateProvider);
+    return !diceState.shouldRoll &&
+        diceState.roll == 1 &&
+        diceState.rolledBy == widget.color;
+  }
+
+  Widget getSizedButton(PieceButton? button) {
+    if (button == null) {
+      return SizedBox(height: 30, width: 30, child: getButtonSlot());
+    }
+
+    if (!shouldAnimate()) {
+      return SizedBox(height: 30, width: 30, child: button);
+    }
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      child: button,
+      builder: (context, child) {
+        return SizedBox(
+          height: _pieceAnimation.value == 0 ? 30 : 25,
+          width: _pieceAnimation.value == 0 ? 30 : 25,
+          child: child,
+        );
+      },
     );
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     List<Piece> allPieces = ref.watch(piecesProvider);
-    List<Piece> piecesOfColor = getPiecesOfColor(allPieces, color);
+    List<Piece> piecesOfColor = getPiecesOfColor(allPieces, widget.color);
 
-    sortPiecesOfColor(piecesOfColor, color);
+    sortPiecesOfColor(piecesOfColor, widget.color);
 
     setOnPressedForUnFreedPieces(piecesOfColor, ref);
 
-    List<SizedBox> buttons = getSizedPieceButtons(piecesOfColor);
+    List<PieceButton?> buttons = getButtonListOfLengthFour(piecesOfColor);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
+    if (shouldAnimate()) {
+      _animationController.repeat();
+    } else {
+      _animationController.reverse();
+    }
+
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child: Center(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [buttons[0], const SizedBox(width: 20), buttons[1]],
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                getSizedButton(buttons[0]),
+                const SizedBox(width: 20),
+                getSizedButton(buttons[1])
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                getSizedButton(buttons[2]),
+                const SizedBox(width: 20),
+                getSizedButton(buttons[3]),
+              ],
+            ),
+          ],
         ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [buttons[2], const SizedBox(width: 20), buttons[3]],
-        )
-      ],
+      ),
     );
   }
 }

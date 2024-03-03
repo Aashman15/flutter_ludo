@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/screens/board/widgets/first_row.dart';
 import 'package:ludo/screens/board/widgets/second_row.dart';
 import 'package:ludo/screens/board/widgets/third_row.dart';
@@ -11,9 +10,6 @@ class BoardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final diceState = ref.watch(diceStateProvider);
-    String message = diceState.shouldRoll ? 'Roll' : 'Move';
-
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -24,32 +20,19 @@ class BoardScreen extends ConsumerWidget {
       },
       child: Scaffold(
         body: Center(
-          child: Column(
+            child: Container(
+          color: const Color.fromARGB(255, 234, 228, 236),
+          child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.purple,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Container(
-                color: const Color.fromARGB(255, 234, 228, 236),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FirstRow(),
-                    SizedBox(height: 10),
-                    SecondRow(),
-                    SizedBox(height: 10),
-                    ThirdRow()
-                  ],
-                ),
-              )
+              FirstRow(),
+              SizedBox(height: 10),
+              SecondRow(),
+              SizedBox(height: 10),
+              ThirdRow()
             ],
           ),
-        ),
+        )),
       ),
     );
   }

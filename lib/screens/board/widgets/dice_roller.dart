@@ -9,6 +9,7 @@ import 'package:ludo/providers/dice_state_provider.dart';
 import 'package:ludo/providers/pieces_provider.dart';
 import 'package:ludo/utils/clicked_piece_util.dart';
 import 'package:ludo/utils/dice_state_util.dart';
+import 'package:ludo/utils/move_piece_or_roll_dice_animation.util.dart';
 import 'package:ludo/utils/sound_utils.dart';
 
 final randomizer = Random();
@@ -24,14 +25,15 @@ class DiceRoller extends ConsumerStatefulWidget {
 
 class _DiceRollerState extends ConsumerState<DiceRoller>
     with SingleTickerProviderStateMixin {
+
   late AnimationController _animationController;
   late Animation<int> _diceAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = getAnimationController();
-    _diceAnimation = getAnimation();
+    _animationController = getAnimationController(this);
+    _diceAnimation = getAnimation(_animationController);
   }
 
   @override
@@ -40,16 +42,7 @@ class _DiceRollerState extends ConsumerState<DiceRoller>
     super.dispose();
   }
 
-  AnimationController getAnimationController() {
-    return AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-  }
 
-  Animation<int> getAnimation() {
-    return IntTween(begin: 0, end: 1).animate(_animationController);
-  }
 
   void rollDice(WidgetRef ref) {
     final diceState = ref.watch(diceStateProvider);
